@@ -1,5 +1,7 @@
 <?php
 
+error_reporting(E_ALL);
+
 set_include_path(get_include_path() . PATH_SEPARATOR . './google-api-php-client/src');
 
 
@@ -29,6 +31,6 @@ if ($client->getAccessToken()) {
     $adsenseService = new Google_Service_AdSense($client);
     $resource = $adsenseService->reports->generate("today-1m", "today");
     var_dump($resource);
-    
+
     $_SESSION['access_token'] = $client->getAccessToken();
 }
