@@ -36,13 +36,13 @@ else {
 if ($client->getAccessToken()) {
     $adsenseService = new Google_Service_AdSense($client);
     $resource = $adsenseService->reports->generate("today-1d", "today");
-    var_dump($resource->getTotals());
+    var_dump($resource->getRows());
 
     $_SESSION['access_token'] = $client->getAccessToken();
 }
 
 if (isset($authUrl)) {
-    echo "<a class='login' href='" . $authUrl . "'>Connect Me!</a>";
+    echo "<a class='login' href='" . $authUrl . "'>Connect Me!</a><br>";
 }
 
 echo "end";
