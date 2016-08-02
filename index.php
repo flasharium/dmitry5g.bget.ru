@@ -35,8 +35,11 @@ else {
 
 if ($client->getAccessToken()) {
     $adsenseService = new Google_Service_AdSense($client);
-    $resource = $adsenseService->reports->generate("today-1m", "today", array("dimensions" => "DATE", "metrics" => "EARNINGS"));
-    var_dump($resource->getRows());
+    $resource = $adsenseService->reports->generate("today-1m", "today");
+    foreach($resource->getRows() as $key => $value) {
+        var_dump($key, $value);
+    }
+
 
     $_SESSION['access_token'] = $client->getAccessToken();
 }
