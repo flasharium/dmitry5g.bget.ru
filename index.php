@@ -100,6 +100,10 @@ if (isset($authUrl)) {
 
 ?></li>
             </ul>
+            <ul class="nav navbar-nav">
+                <li><a class='' href='/clustering'>Clustering</a></li>
+                <li><a class='' href='/cm'>CM</a></li>
+            </ul>
         </div><!--/.nav-collapse -->
     </div>
 </nav>
@@ -116,6 +120,8 @@ $resource = $adsenseService->accounts_reports->generate("pub-2243971898865156", 
 $total = $resource->getTotals();
 $avg = $resource->getAverages();
 ?>
+
+<? if ($client->getAccessToken() && $ya_token) { ?>
 
 
 <div class="container theme-showcase" role="main">
@@ -185,5 +191,7 @@ $cpi = $total[1]/$unics;
     <div class="alert alert-success" role="alert">
         <strong>Доход на посетителя:</strong> <?printf("%.3f", $cpi)?>
     </div>
+
+<? } ?>
 </body>
 </html>

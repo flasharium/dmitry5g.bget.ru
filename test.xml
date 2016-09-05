@@ -1,0 +1,736 @@
+<?xml version="1.0" encoding="utf-8"?>
+<yandexsearch version="1.0">
+  <request>
+    <query>
+      прививка адсм
+    </query>
+    <page>
+      0
+    </page>
+    <sortby order="descending" priority="no">
+      rlv
+    </sortby>
+    <maxpassages>
+      5
+    </maxpassages>
+    <groupings>
+      <groupby attr="" mode="flat" groups-on-page="10" docs-in-group="1" curcateg="-1" />
+    </groupings>
+  </request>
+  <response date="20160806T104950">
+    <reqid>
+      1470480590205176-433986311554357455381119-myt1-0790-XML
+    </reqid>
+    <found priority="phrase">
+      96637
+    </found>
+    <found priority="strict">
+      96637
+    </found>
+    <found priority="all">
+      96637
+    </found>
+    <found-human>
+      Нашлось 97 тыс. ответов
+    </found-human>
+    <results>
+      <grouping attr="" mode="flat" groups-on-page="10" docs-in-group="1" curcateg="-1">
+        <found priority="phrase">
+          57851
+        </found>
+        <found priority="strict">
+          57851
+        </found>
+        <found priority="all">
+          57851
+        </found>
+        <found-docs priority="phrase">
+          57851
+        </found-docs>
+        <found-docs priority="strict">
+          57851
+        </found-docs>
+        <found-docs priority="all">
+          57851
+        </found-docs>
+        <found-docs-human>
+          нашёл 58 тыс. ответов
+        </found-docs-human>
+        <page first="1" last="10">
+          0
+        </page>
+        <group>
+          <doccount>
+            1
+          </doccount>
+          <relevance />
+          <doc id="ZD31C860A401148C2">
+            <relevance />
+            <url>
+              http://www.tiensmed.ru/news/privivadsm-t6u.html
+            </url>
+            <domain>
+              www.tiensmed.ru
+            </domain>
+            <title>
+              <hlword>
+                Прививка
+              </hlword>
+              <hlword>
+                АДСМ
+              </hlword>
+              - правила вакцинации, реакции и осложнения
+            </title>
+            <headline>
+              Оглавление. Преимущества
+              <hlword>
+                прививки
+              </hlword>
+              <hlword>
+                АДСМ
+              </hlword>
+              перед АС и АД.
+              <hlword>
+                Прививка
+              </hlword>
+              <hlword>
+                АДСМ
+              </hlword>
+              взрослым. ... детям. ... и беременность. Календарь
+              <hlword>
+                прививок
+              </hlword>
+              <hlword>
+                АДСМ
+              </hlword>
+              .
+              <hlword>
+                Прививка
+              </hlword>
+              <hlword>
+                АДСМ
+              </hlword>
+              R2 и R3. ... в 7 лет. ... в 14 лет. Где сделать
+              <hlword>
+                прививку
+              </hlword>
+              <hlword>
+                АДСМ
+              </hlword>
+              ? Куда делают инъекцию вакцины?
+              <hlword>
+                Прививка
+              </hlword>
+              <hlword>
+                АДСМ
+              </hlword>
+              – инструкция. Реакция на вакцину и ее последствия. Алкоголь и
+              <hlword>
+                АДСМ
+              </hlword>
+              . Осложнения у взрослых и детей. Противопоказания.
+            </headline>
+            <modtime>
+              20130327T152637
+            </modtime>
+            <size>
+              59481
+            </size>
+            <charset>
+              windows-1251
+            </charset>
+            <properties>
+              <_PassagesType>
+                0
+              </_PassagesType>
+              <lang>
+                ru
+              </lang>
+            </properties>
+            <mime-type>
+              text/html
+            </mime-type>
+          </doc>
+        </group>
+        <group>
+          <doccount>
+            1
+          </doccount>
+          <relevance />
+          <doc id="Z7C47057846E2CE87">
+            <relevance />
+            <url>
+              http://fb.ru/article/212927/privivka-adsm-vzroslyim-protivopokazaniya-oslojneniya-i-otzyivyi
+            </url>
+            <domain>
+              fb.ru
+            </domain>
+            <title>
+              <hlword>
+                Прививка
+              </hlword>
+              <hlword>
+                АДСМ
+              </hlword>
+              взрослым: противопоказания, осложнения...
+            </title>
+            <modtime>
+              20151106T112441
+            </modtime>
+            <size>
+              68876
+            </size>
+            <charset>
+              utf-8
+            </charset>
+            <passages>
+              <passage>
+                Механизм действия
+                <hlword>
+                  АДСМ
+                </hlword>
+                .
+                <hlword>
+                  Прививка
+                </hlword>
+                <hlword>
+                  АДСМ
+                </hlword>
+                взрослым людям в организм внедряет ослабленный столбнячный и дифтерийный токсины, сохранившие свои иммуногенные свойства. Токсины вызывают в ответ на их присутствие выработку организмом специфических антител.
+              </passage>
+            </passages>
+            <properties>
+              <_PassagesType>
+                0
+              </_PassagesType>
+              <lang>
+                ru
+              </lang>
+            </properties>
+            <mime-type>
+              text/html
+            </mime-type>
+          </doc>
+        </group>
+        <group>
+          <doccount>
+            1
+          </doccount>
+          <relevance />
+          <doc id="Z632DFE7C22650599">
+            <relevance />
+            <url>
+              http://www.vse-pro-detey.ru/privivka-adsm/
+            </url>
+            <domain>
+              www.vse-pro-detey.ru
+            </domain>
+            <title>
+              <hlword>
+                Прививка
+              </hlword>
+              <hlword>
+                АДСМ
+              </hlword>
+              детям: что это такое, куда и когда делают...
+            </title>
+            <modtime>
+              20150130T194119
+            </modtime>
+            <size>
+              60942
+            </size>
+            <charset>
+              utf-8
+            </charset>
+            <passages>
+              <passage>
+                <hlword>
+                  Прививка
+                </hlword>
+                <hlword>
+                  АДСМ
+                </hlword>
+                : расшифровка, график, противопоказания и побочные эффекты. Дифтерия и столбняк — достаточно серьёзные инфекционные заболевания, которые опасны своими последствиями. Чтобы предупредить заражение ими, детям предлагается
+                <hlword>
+                  прививка
+                </hlword>
+                <hlword>
+                  АДСМ
+                </hlword>
+                в возрасте после 4-ёх лет.
+              </passage>
+            </passages>
+            <properties>
+              <_PassagesType>
+                0
+              </_PassagesType>
+              <lang>
+                ru
+              </lang>
+            </properties>
+            <mime-type>
+              text/html
+            </mime-type>
+          </doc>
+        </group>
+        <group>
+          <doccount>
+            1
+          </doccount>
+          <relevance />
+          <doc id="Z0CEE4D910B850057">
+            <relevance />
+            <url>
+              http://LediVeka.ru/deti/detskoe-zdorove/privivka-adsm-protivopokazaniya-i-oslozhneniya.html
+            </url>
+            <domain>
+              LediVeka.ru
+            </domain>
+            <title>
+              <hlword>
+                Прививка
+              </hlword>
+              <hlword>
+                АДСМ
+              </hlword>
+              – противопоказания, последствия и осложнения
+            </title>
+            <modtime>
+              20151106T104002
+            </modtime>
+            <size>
+              240826
+            </size>
+            <charset>
+              utf-8
+            </charset>
+            <passages>
+              <passage>
+                Для этого была создана специальная
+                <hlword>
+                  прививка
+                </hlword>
+                <hlword>
+                  АДСМ
+                </hlword>
+                . По сути, она является вариацией детской
+                <hlword>
+                  прививки
+                </hlword>
+                АКДС, но без такого компонента, как вакцина от коклюша. Ведь в более взрослом возрасте (от 4-х лет) эта болезнь не является смертельно опасной. Как и в случае с АКДС, любой из взрослых, включая родителей, волен сам решать, делать ли
+                <hlword>
+                  АДСМ
+                </hlword>
+                себе (ребенку) или же нет.
+              </passage>
+            </passages>
+            <properties>
+              <_PassagesType>
+                0
+              </_PassagesType>
+              <lang>
+                ru
+              </lang>
+            </properties>
+            <mime-type>
+              text/html
+            </mime-type>
+          </doc>
+        </group>
+        <group>
+          <doccount>
+            1
+          </doccount>
+          <relevance />
+          <doc id="Z66C12D8C6416A00B">
+            <relevance />
+            <url>
+              http://vseprivivki.com/vakcinaciya/privivka-ads-m
+            </url>
+            <domain>
+              vseprivivki.com
+            </domain>
+            <title>
+              <hlword>
+                Прививка
+              </hlword>
+              <hlword>
+                АДС
+              </hlword>
+              -
+              <hlword>
+                М
+              </hlword>
+            </title>
+            <headline>
+              Расшифровка аббревиатуры
+              <hlword>
+                АДС
+              </hlword>
+              -
+              <hlword>
+                М
+              </hlword>
+              (именно так правильно называется вакцина) – анатоксин дифтерийно-столбнячный в малых дозах.
+              <hlword>
+                Прививка
+              </hlword>
+              <hlword>
+                АДСМ
+              </hlword>
+              является вариантом известной
+              <hlword>
+                прививки
+              </hlword>
+              АКДС, и отличается...
+            </headline>
+            <modtime>
+              20141212T001843
+            </modtime>
+            <size>
+              53561
+            </size>
+            <charset>
+              utf-8
+            </charset>
+            <properties>
+              <_PassagesType>
+                0
+              </_PassagesType>
+              <lang>
+                ru
+              </lang>
+            </properties>
+            <mime-type>
+              text/html
+            </mime-type>
+          </doc>
+        </group>
+        <group>
+          <doccount>
+            1
+          </doccount>
+          <relevance />
+          <doc id="ZB9BF75BCA939791B">
+            <relevance />
+            <url>
+              http://womanadvice.ru/privivka-adsm
+            </url>
+            <domain>
+              womanadvice.ru
+            </domain>
+            <title>
+              <hlword>
+                Прививка
+              </hlword>
+              <hlword>
+                АДСМ
+              </hlword>
+            </title>
+            <modtime>
+              20140211T072156
+            </modtime>
+            <size>
+              32326
+            </size>
+            <charset>
+              utf-8
+            </charset>
+            <passages>
+              <passage>
+                Введение инъекции
+                <hlword>
+                  АДСМ
+                </hlword>
+                аналогично АКДС. Касательно того, куда делают
+                <hlword>
+                  прививку
+                </hlword>
+                <hlword>
+                  АДСМ
+                </hlword>
+                , то обычно детям дошкольного возраста вакцину колют внутримышечно в передненаружную часть бедра или в верхний наружный квадрант ягодицы. Подросткам и взрослым возможен ввод
+                <hlword>
+                  прививки
+                </hlword>
+                в подлопаточную область подкожно.
+              </passage>
+            </passages>
+            <properties>
+              <_PassagesType>
+                0
+              </_PassagesType>
+              <lang>
+                ru
+              </lang>
+            </properties>
+            <mime-type>
+              text/html
+            </mime-type>
+          </doc>
+        </group>
+        <group>
+          <doccount>
+            1
+          </doccount>
+          <relevance />
+          <doc id="Z87F84ADD79DC0976">
+            <relevance />
+            <url>
+              https://otvet.mail.ru/question/35094878
+            </url>
+            <domain>
+              otvet.mail.ru
+            </domain>
+            <title>
+              Ответы@Mail.Ru: От чего ставят
+              <hlword>
+                прививку
+              </hlword>
+              <hlword>
+                АДС
+              </hlword>
+              -
+              <hlword>
+                М
+              </hlword>
+              ? Она не опасна?
+            </title>
+            <modtime>
+              20110528T113252
+            </modtime>
+            <size>
+              184072
+            </size>
+            <charset>
+              utf-8
+            </charset>
+            <passages>
+              <passage>
+                <hlword>
+                  АДСМ
+                </hlword>
+                - это вакцина, которая содержит уменьшенное количество антигенов и адсорбированной коклюшно-дифтерийно-столбнячной вакцины (АКДС) , но без противококлюшного компонента (с этим компонентом чаще всего связаны неблагоприятные реакции на
+                <hlword>
+                  прививку
+                </hlword>
+                ) . Эта вакцина применяется для плановой (в соответствии с календарем
+                <hlword>
+                  прививок
+                </hlword>
+                ) ревакцинации (повторной вакцинации) детей в 6-7 летнем возрасте и в 16-17 лет.
+              </passage>
+            </passages>
+            <properties>
+              <_PassagesType>
+                0
+              </_PassagesType>
+              <lang>
+                ru
+              </lang>
+            </properties>
+            <mime-type>
+              text/html
+            </mime-type>
+          </doc>
+        </group>
+        <group>
+          <doccount>
+            1
+          </doccount>
+          <relevance />
+          <doc id="Z0189B2094F37E14E">
+            <relevance />
+            <url>
+              http://deti.baby-calendar.ru/kalendar-privivok/adsm/
+            </url>
+            <domain>
+              deti.baby-calendar.ru
+            </domain>
+            <title>
+              <hlword>
+                Прививка
+              </hlword>
+              <hlword>
+                АДСМ
+              </hlword>
+              : что это такое (расшифровка), календарь...
+            </title>
+            <modtime>
+              20150317T173746
+            </modtime>
+            <size>
+              125753
+            </size>
+            <charset>
+              utf-8
+            </charset>
+            <passages>
+              <passage>
+                дополнительноАДСМ предназначена для детей, которым требуется ревакцинация после
+                <hlword>
+                  прививки
+                </hlword>
+                АКДС. Эффект от
+                <hlword>
+                  прививки
+                </hlword>
+                <hlword>
+                  АДСМ
+                </hlword>
+                можно сравнить с перенесенной легкой формой дифтерии или столбняка, но при этом практически никаких симптомов заболевания проявиться не должно.
+              </passage>
+            </passages>
+            <properties>
+              <_PassagesType>
+                0
+              </_PassagesType>
+              <lang>
+                ru
+              </lang>
+            </properties>
+            <mime-type>
+              text/html
+            </mime-type>
+          </doc>
+        </group>
+        <group>
+          <doccount>
+            1
+          </doccount>
+          <relevance />
+          <doc id="Z80D1987648FD2DA6">
+            <relevance />
+            <url>
+              http://MiniDetki.ru/zdorov-e/privivka-adsm.html
+            </url>
+            <domain>
+              MiniDetki.ru
+            </domain>
+            <title>
+              Что такое
+              <hlword>
+                прививка
+              </hlword>
+              <hlword>
+                АДСМ
+              </hlword>
+              | MiniDetki - фото, видео портал
+            </title>
+            <modtime>
+              20150401T180917
+            </modtime>
+            <size>
+              101016
+            </size>
+            <charset>
+              utf-8
+            </charset>
+            <passages>
+              <passage>
+                В существующем графике детских вакцинаций имеет место и
+                <hlword>
+                  прививка
+                </hlword>
+                <hlword>
+                  АДСМ
+                </hlword>
+                — к сожалению не все родители знают что это такое. Есть
+                <hlword>
+                  прививка
+                </hlword>
+                АКДС, в ней отсутствует один компонент, который направлен на борьбу с коклюшем и многие родители путают эти две вакцины, но они абсолютно разные. Вакцинация
+                <hlword>
+                  АДСМ
+                </hlword>
+                от дифтерии и столбняка применяется на сегодняшний день для ревакцинаций...
+              </passage>
+            </passages>
+            <properties>
+              <_PassagesType>
+                0
+              </_PassagesType>
+              <lang>
+                ru
+              </lang>
+            </properties>
+            <mime-type>
+              text/html
+            </mime-type>
+          </doc>
+        </group>
+        <group>
+          <doccount>
+            1
+          </doccount>
+          <relevance />
+          <doc id="Z8F27858DD013BC19">
+            <relevance />
+            <url>
+              http://womanadvice.ru/privivka-adsm-chto-eto
+            </url>
+            <domain>
+              womanadvice.ru
+            </domain>
+            <title>
+              <hlword>
+                Прививка
+              </hlword>
+              <hlword>
+                АДСМ
+              </hlword>
+              - что это?
+            </title>
+            <modtime>
+              20150427T154745
+            </modtime>
+            <size>
+              33107
+            </size>
+            <charset>
+              utf-8
+            </charset>
+            <passages>
+              <passage>
+                <hlword>
+                  Прививка
+                </hlword>
+                <hlword>
+                  АДСМ
+                </hlword>
+                - что это? Всем мамам известно, что
+                <hlword>
+                  прививки
+                </hlword>
+                помогают предупредить развитие того или иного заболевания у детей. Среди всех вакцин, особое место занимает
+                <hlword>
+                  АДСМ
+                </hlword>
+                . Довольно часто мамы впервые услышав от врача о необходимости проведения
+                <hlword>
+                  прививки
+                </hlword>
+                <hlword>
+                  АДСМ
+                </hlword>
+                , спрашивают, что это, потому как не знают, как она расшифровывается.
+              </passage>
+            </passages>
+            <properties>
+              <_PassagesType>
+                0
+              </_PassagesType>
+              <lang>
+                ru
+              </lang>
+            </properties>
+            <mime-type>
+              text/html
+            </mime-type>
+          </doc>
+        </group>
+      </grouping>
+    </results>
+  </response>
+</yandexsearch>

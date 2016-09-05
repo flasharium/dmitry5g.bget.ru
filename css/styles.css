@@ -1,0 +1,79 @@
+body { background-color: #ffffff; }
+
+.bordered { border-color: #ddd; border-width: 1px; border-radius: 4px 4px 0 0; background-color: white; }
+
+.center-block { display: block; margin-left: auto; margin-right: auto; }
+
+.element { .center-block(); }
+
+.keyword-item { padding: 5px 10px; }
+
+.list-item-checked { background-color: #b5ceeb; }
+
+.keywords-groups { }
+
+.keyword-filter { }
+
+.treeView-root { margin-left: -20px;}
+  .treeView-root * { cursor: pointer; padding: 0; margin: 0; }
+
+.treeView-droppable-zone {  margin-top: 20px;}
+
+.treeView-section { margin-left: 20px; }
+  .treeView-section-header { list-style: none; display: block; padding: 2px 2px; color: #000099; }
+  .treeView-section-header:hover { background-color: #eeeeee;}
+    .treeView-section-header-label {margin-left: 10px; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; font-size: 14px;}
+
+.treeView-group { margin-left: 20px; }
+  .treeView-group-header { color: #880000; display: block; padding: 2px 2px; }
+  .treeView-group-header:hover { background-color: #eeeeee; }
+    .treeView-group-header-label {margin-left: 10px; font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; font-size: 14px;}
+
+.treeView-key { list-style-type: none; margin-left: 26px; font-style: italic; }
+  .treeView-key:hover { background-color: #eeeeee; }
+
+.drop-here { background-color: #dde9ff; border: 3px dashed #93bfeb; padding: 3px;}
+.bg-blue { background-color: #ddddff; }
+
+.tab-content-fullscreen { height: calc(100vh - 176px); overflow-y: scroll; }
+.tab-groups-fullscreen { height: calc(100vh - 95px); overflow-y: scroll; }
+.panel-heading-flex { display: flex; justify-content: space-between; }
+.root-keywords { }
+.button-switch-panels { display: none; }
+.panel { margin: 5px -10px; }
+.tab-pane { margin-top: -10px; }
+
+@media (max-width: 990px) {
+  .tab-content-fullscreen { height: calc(100vh - 140px); min-height: calc(100vh - 140px); }
+  .root-groups { display: none; }
+  .button-switch-panels { display: block; }
+  .keyword-item { min-height: 50px; vertical-align: middle; }
+  .filter-additional { display: none; }
+  .filter-first { margin-top: -5px; margin-bottom: 5px; }
+}
+
+div.well{
+  height: 250px;
+}
+
+.Absolute-Center {
+  margin: auto;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+}
+
+.Absolute-Center.is-Responsive {
+  width: 50%;
+  height: 50%;
+  min-width: 200px;
+  max-width: 400px;
+  padding: 40px;
+}
+
+#logo-container{
+  margin: auto;
+  margin-bottom: 10px;
+  width:200px;
+  height:30px;
+  background-image:url('http://placehold.it/200x30/000000/ffffff/&text=BRAND+LOGO');
+}
