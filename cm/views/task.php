@@ -11,7 +11,6 @@ if (isset($_REQUEST['edit_task'])) {
     $edited_task = $task;
     $edited_task['result_url'] = $_REQUEST['edit_task']['result_url'];
     $edited_task['project_id'] = $_REQUEST['edit_task']['project_id'];
-//    $edited_task['title'] = $_REQUEST['edit_task']['title'];
 
     if (isset($_REQUEST['review'])) {
         if ($edited_task['result_url']) {
