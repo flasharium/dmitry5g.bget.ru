@@ -11,6 +11,7 @@ if (isset($_REQUEST['edit_task'])) {
     $edited_task = $task;
     $edited_task['result_url'] = $_REQUEST['edit_task']['result_url'];
     $edited_task['project_id'] = $_REQUEST['edit_task']['project_id'];
+//    $edited_task['title'] = $_REQUEST['edit_task']['title'];
 
     if (isset($_REQUEST['review'])) {
         if ($edited_task['result_url']) {
@@ -56,6 +57,11 @@ $users = to_flat_array(db_list('users'), 'id', 'name');
                 <h2>Задание #<?=$task['id']?> <?=print_status($task['status'])?></h2>
 
                 <?=print_result()?>
+
+                <div class="form-group">
+                    <label for="titleField">Название</label>
+                    <input disabled type="text" value="<?=$task['title']?>" class="form-control" name="edit_task[title]" id="titleField">
+                </div>
 
                 <div class="form-group">
                     <label for="disabledInput">Задание в TZ</label><br/>

@@ -39,6 +39,25 @@ if (isset($_REQUEST['create_tasks'])) {
 
 }
 
+if (array_get($_REQUEST, 'action') == 'refresh_group_titles') {
+    require_once "components/binet-parser.php";
+    if ($groups = get_all_groups()) {
+        $counter = 0;
+        $tasks = db_list('cm_tasks');
+        foreach ($tasks as $task) {
+            if (isset($groups[$task['tz_id']])) {
+                $task['title'] = $groups[$task['tz_id']];
+                db_update('cm_tasks', $task);
+                $counter++;
+            }
+        }
+        if ($counter) {
+            $success .= " Обновлено $counter названий ";
+        }
+
+    }
+}
+
 ?>
 
 <div class="container">
@@ -79,6 +98,11 @@ if (isset($_REQUEST['create_tasks'])) {
 
             </form>
 
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <a href="/cm?view=add_tasks&action=refresh_group_titles" class="btn btn-default" role="button"><span class="glyphicon glyphicon-refresh"></span> Обновить названия</a>
         </div>
     </div>
 </div>

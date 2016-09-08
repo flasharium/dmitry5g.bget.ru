@@ -21,8 +21,8 @@ function task_table_view($filter, $projects, $users) {
             <tr>
                 <td><?=$task['id']?></td>
                 <th><input name="mass_changing[task_ids][]" type="checkbox" class="task-checkbox" value="<?=$task['id']?>"/></th>
-                <td><a href="<?= task_url($task['id']) ?>">Открыть</a></td>
-                <td>
+                <td width="100%"><a href="<?= task_url($task['id']) ?>"><?=($task['title']?$task['title']:'Открыть')?></a></td>
+                <td width="100%">
                     <? if ($task['result_url']) {
                         $parts = explode('/', $task['result_url']);
                         $last = end($parts);
