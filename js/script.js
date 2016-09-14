@@ -46,10 +46,10 @@ function asyncRequest(data, onSuccess) {
 
 function createTreeView(isTouchDevice) {
     asyncRequest({project_id: projectId, action: 'list_groups'}, function (resp) {
-        var treeView = new TreeView(isTouchDevice);
-        treeView.setView($(".keywords-groups").eq(0));
-        treeView.setData(resp);
-        treeView.redraw()
+        myApp.treeView = new TreeView(isTouchDevice);
+        myApp.treeView.setView($(".keywords-groups").eq(0));
+        myApp.treeView.setData(resp);
+        myApp.treeView.redraw()
     })
 }
 
@@ -171,6 +171,13 @@ function initTabSwitching() {
     });
 }
 
+function onTreeUpdated() {
+    var data = JSON.stringify(myApp.treeView.getData())
+    asyncRequest({project_id: projectId, action: 'change_struct', "struct": data}, function(data){
+        console.log(data);
+    })
+}
+
 $(document).ready(function () {
 
     projectId = $("#project_id").val();
@@ -185,6 +192,8 @@ $(document).ready(function () {
     })
 
     $("#start_tab").click()
+
+    EventMachine.register('treeUpdated', onTreeUpdated)
 
 });
 

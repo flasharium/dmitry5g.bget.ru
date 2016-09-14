@@ -34,7 +34,11 @@ TreeView = function (isTouchDevice) {
         return dict
     }
 
-    function getKeyData(view) {
+    function getKeyData(view, short=null) {
+        if (short) {
+            return {'id' : view.attr("keyId")}
+        }
+
         return {
             "id": view.attr("keyId"),
             "phrase": view.attr("phrase"),
@@ -164,6 +168,8 @@ TreeView = function (isTouchDevice) {
                         updateGroupView(self)
 
                     }
+
+                    EventMachine.send('treeUpdated')
                 }
             })
 
@@ -226,6 +232,8 @@ TreeView = function (isTouchDevice) {
                         self.append(createGroupView(newGroup))
 
                     }
+
+                    EventMachine.send('treeUpdated')
                 }
             })
             .on("click", function () {
@@ -315,6 +323,8 @@ TreeView = function (isTouchDevice) {
                     $(".treeView-root").append(createGroupView(newGroup))
 
                 }
+
+                EventMachine.send('treeUpdated')
             }
         })
 
@@ -343,6 +353,8 @@ TreeView = function (isTouchDevice) {
                     selected.remove()
 
                 }
+
+                EventMachine.send('treeUpdated')
             }
         })
 
@@ -374,6 +386,35 @@ TreeView = function (isTouchDevice) {
         dictSections = createDict(sections, 'parent_id');
         dictGroups = createDict(groups, 'section_id');
         dictKeys = createDict(keys, 'group_id')
+    };
+
+    function parseGroup(groupView) {
+        var res = []
+        $(groupView).children('.treeView-key').each(function(){
+            res.push($(this).attr("keyId"))
+        })
+        return res
+    }
+
+    function parseSectionsAndGroups(rootView) {
+        var res = []
+
+        $(rootView).children('.treeView-section').each(function(){
+            res.push({
+                'n':  $(this).children('.treeView-section-header').eq(0).text(),
+                'c': parseSectionsAndGroups(this)
+            })
+        })
+
+        $(rootView).children('.treeView-group').each(function(){
+            res.push({ 'c': parseGroup(this) })
+        })
+
+        return res;
+    }
+
+    this.getData = function() {
+        return parseSectionsAndGroups($('.treeView-root').eq(0));
     };
 
     this.redraw = function () {

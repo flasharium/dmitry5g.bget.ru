@@ -1,13 +1,14 @@
+
 EventMachine = (function () {
     var receivers = [];
 
     return {
-        send: function () {
+        send: function (/* eventId, argumentsList */) {
             var args = [].slice.call(arguments);
             var eventId = args.shift()
             if (receivers[eventId]) {
-                for (method in receivers[eventId]) {
-                    method.apply(null, args)
+                for (num in receivers[eventId]) {
+                    receivers[eventId][num].apply(null, args)
                 }
             }
         },

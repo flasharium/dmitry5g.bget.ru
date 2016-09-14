@@ -30,7 +30,7 @@ function db_query($query) {
     }
 }
 
-function db_get($table, $criteria) {
+function db_get($table, $criteria, $order = '') {
     $add = '';
     if ($criteria) {
         foreach ($criteria as $field => $value) {
@@ -41,7 +41,7 @@ function db_get($table, $criteria) {
             }
         }
     }
-    $query = "select * from $table where 1 " . $add . " limit 1 ";
+    $query = "select * from $table where 1 " . $add . " $order limit 1 ";
     $result = db_query($query);
     if ($result && $result->num_rows > 0) {
         return $result->fetch_assoc();
@@ -112,10 +112,12 @@ function db_update($table, $fields, $crit = array()) {
         }
     }
     $set = implode(',', $set);
-    if (is_string($fields['id'])) {
-        $where = " and id = " . $fields['id'];
-    } elseif (is_array($fields['id'])) {
-        $where = " and id in (" . implode(',', $fields['id']) . ') ';
+    if (isset($fields['id'])) {
+        if (is_string($fields['id'])) {
+            $where = " and id = " . $fields['id'];
+        } elseif (is_array($fields['id'])) {
+            $where = " and id in (" . implode(',', $fields['id']) . ') ';
+        }
     }
 
     foreach ($crit as $field => $value) {
