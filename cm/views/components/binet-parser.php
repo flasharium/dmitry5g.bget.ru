@@ -1,9 +1,19 @@
 <?php
 
-function get_binet_content($url) {
-    static $context;
-    $content = file_get_contents($url, false, $context);
-    if (!$context || strpos($content, '<a href="#" class="h_login_btn" title="Вход">Вход</a>') !== false) {
+$root = dirname(__FILE__);
+require_once "$root/../../../libs/proj/inc.php";
+require_once "$root/../../cm_inc.php";
+require_once "$root/../../../libs/simplehtmldom_1_5/simple_html_dom.php";
+
+
+function get_binet_content($url, $post_data = array()) {
+    static $context, $ResponseCookie;
+
+    if (!$post_data) {
+        $content = file_get_contents($url, false, $context);
+    }
+
+    if (!$context || !$ResponseCookie || strpos($content, '<a href="#" class="h_login_btn" title="Вход">Вход</a>') !== false) {
         // unauthorized
         // curl '' -H 'Cookie: '
         // -H 'Origin: http://tz.binet.pro'
@@ -56,9 +66,26 @@ function get_binet_content($url) {
 
         $context = stream_context_create($opts);
     }
-    $content = file_get_contents($url, false, $context);
 
-    return $content;
+    if ($post_data) {
+        $data_url = http_build_query ($post_data);
+        $data_len = strlen ($data_url);
+
+        $opts = array(
+            'http'=>array(
+                'method'=>"POST",
+                'header'=>"Accept-language: en\r\n" .
+                    "Content-Type:application/x-www-form-urlencoded\r\n" .
+                    "Content-Length: $data_len\r\n".
+                    "Cookie: $ResponseCookie\r\n",
+                'content'=>$data_url
+            )
+        );
+
+        return file_get_contents($url, false, stream_context_create($opts));
+    }
+
+    return file_get_contents($url, false, $context);
 }
 
 function get_all_groups() {
@@ -88,3 +115,46 @@ function get_all_groups() {
     return $keys;
 }
 
+function check_task_in_tz($task_or_id) {
+    if (!is_array($task_or_id)) {
+        $task = db_get_by_id('cm_tasks', $task_or_id);
+    } else {
+        $task = $task_or_id;
+    }
+
+    if (!$task) die("task not found");
+
+    $clean_content = get_clean_article_content($task);
+
+    $tz_id = $task['tz_id'];
+
+    $tz_response =  get_binet_content("http://tz.binet.pro/keys/view/index?id=$tz_id", array(
+        'CheckTxtForm[article]' => $clean_content,
+        'CheckTxtForm[endes]' => '1',
+    ));
+
+    if (!$tz_response) die('bad $tz_response');
+
+    $html = str_get_html($tz_response);
+
+    if(!$html) die('bad $html');
+
+    $dom_object = reset($html->find('div.recomment_list'));
+
+    $recommendations_raw = $dom_object->innertext;
+
+    if (!$recommendations_raw) die('bad $recommendations_raw');
+
+    $result = '';
+    if (strpos($recommendations_raw, 'Текст соответствует ТЗ') !== false) {
+        $result = "success";
+    } else {
+        $result = $recommendations_raw;
+    }
+
+    $task['last_tz_check'] = $result;
+    $task['last_tz_check_time'] = time();
+
+    db_update('cm_tasks', $task);
+    return true;
+}

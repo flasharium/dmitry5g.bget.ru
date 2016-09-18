@@ -51,7 +51,7 @@ $users = to_flat_array(db_list('users'), 'id', 'name');
 
 <div class="container">
     <div class="rov">
-        <div class="col-md-6" style="border-right: 1px solid #ccc;">
+        <div class="col-md-6">
             <form action="" method="post">
                 <h2>Задание #<?=$task['id']?> <?=print_status($task['status'])?></h2>
 
@@ -112,39 +112,61 @@ $users = to_flat_array(db_list('users'), 'id', 'name');
                 <? } ?>
 
             </form>
+
+            <?if ($task['last_tz_check'] && $task['last_tz_check'] != 'update_waiting') {?>
+
+                <div class="panel panel-info" style="margin: 50px 0;">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            Результаты последней проверки в TZ
+                            <?=($task['last_tz_check_time'] ? date('(Y-m-d H:i:s)', $task['last_tz_check_time']) : '')?>
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+                        <?=($task['last_tz_check'] == 'success' ? 'Текст соответствует ТЗ' : $task['last_tz_check'])?>
+                    </div>
+                </div>
+
+            <?}?>
         </div>
 
         <div class="col-md-6">
 
-            <h3>Комментарии</h3>
 
-            <div>
 
-                <? foreach (comments() as $comment) { ?>
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <strong><?=$users[$comment['user_id']]?></strong>
-                            <i><?=date("Y-m-d H:i:s", $comment['ctime'])?></i>
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        Комментарии
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <? foreach (comments() as $comment) { ?>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <strong><?=$users[$comment['user_id']]?></strong>
+                                <i><?=date("Y-m-d H:i:s", $comment['ctime'])?></i>
+                            </div>
+                            <div class="panel-body">
+                                <?= $comment['content'] ?>
+                            </div>
                         </div>
-                        <div class="panel-body">
-                            <?= $comment['content'] ?>
-                        </div>
-                    </div>
-                <? } ?>
+                    <? } ?>
 
+                    <form action="" method="post">
+                        <h4>Добавить комментарий</h4>
+                        <div class="form-group">
+                            <textarea class="form-control" rows="3" name="comment[content]"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-default">Отправить</button>
+                        </div>
+                    </form>
+
+                </div>
             </div>
 
-            <hr/>
 
-            <form action="" method="post">
-                <h4>Добавить комментарий</h4>
-                <div class="form-group">
-                    <textarea class="form-control" rows="3" name="comment[content]"></textarea>
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-default">Отправить</button>
-                </div>
-            </form>
 
         </div>
 

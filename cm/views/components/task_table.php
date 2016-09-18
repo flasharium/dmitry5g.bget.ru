@@ -32,7 +32,23 @@ function task_table_view($filter, $projects, $users) {
                         –
                     <?}?>
                 </td>
-                <td><a target="_blank" href="<?= tz_url($task['tz_id']) ?>"><?= $task['tz_id'] ?></a></td>
+                <td nowrap>
+                    <?
+                        switch($task['last_tz_check']) {
+                            case 'update_waiting':
+                                echo "<span class='glyphicon glyphicon-time' title='Проверяется в TZ...'></span>";
+                                break;
+                            case 'success':
+                                echo "<span style='color:green' class='glyphicon glyphicon-leaf' title='Статья соответствует TZ'></span>";
+                                break;
+                            case '': break;
+                            default:
+                                echo "<span style='color: #d32a0e' class='glyphicon glyphicon-fire' title='Есть несоответствия с TZ'></span>";
+                                break;
+                        }
+                    ?>
+                    <a target="_blank" href="<?= tz_url($task['tz_id']) ?>"><?= $task['tz_id'] ?></a>
+                </td>
                 <td><?=$projects[$task['project_id']]?></td>
                 <td nowrap><?=$task['user_id'] ? $users[$task['user_id']] : '–'?></td>
                 <td><?=$task['report_id'] ?

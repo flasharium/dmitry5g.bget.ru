@@ -10,7 +10,7 @@ $statuses = array(
     STATUS_NEW =>    array('id' => STATUS_NEW, 'title' => 'новое', 'class' => 'label-warning'),
     STATUS_REVIEW => array('id' => STATUS_REVIEW, 'title' => 'готово к проверке', 'class' => 'label-success'),
     STATUS_REMAKE => array('id' => STATUS_REMAKE, 'title' => 'доработки', 'class' => 'label-danger'),
-    STATUS_COMPLETE => array('id' => STATUS_COMPLETE, 'title' => 'оплачено', 'class' => 'label-info'),
+    STATUS_COMPLETE => array('id' => STATUS_COMPLETE, 'title' => 'одобрено', 'class' => 'label-info'),
 );
 
 define('REPORT_STATUS_NEW', 1);
@@ -71,17 +71,52 @@ function print_result(){
 ?>
 
 <? if ($error) { ?>
-    <div class="alert alert-danger" role="alert">
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
         <?=$error?>
     </div>
 <? } ?>
 
 <? if ($success) { ?>
-    <div class="alert alert-success" role="alert">
+    <div class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
         <?=$success?>
     </div>
 <? } ?>
 <?
+}
+
+function clean_content($content) {
+    $str = strip_tags($content);
+    return preg_replace('#\[[^\]]+\]#', '', $str);
+}
+
+function get_clean_article_content($task) {
+    if (!$result_url = $task['result_url']) die("result_url is empty!");
+
+    if (!$project = db_get_by_id('projects', $task['project_id'])) die("project not found");
+
+    $project_name = $project['name'];
+
+    $post_id = `cd ~/$project_name/public_html/ && \
+                echo "$result_url" | \
+                ~/wp eval-file post_ids.php --skip-plugins=rustolat`;
+
+    $cli_out = `cd ~/$project_name/public_html/ && \
+                ~/wp post list --fields=url,content --format=csv --post__in=$post_id`;
+
+    if (!$cli_out) die('wrong $cli_out');
+
+    $parsed_out = str_getcsv($cli_out, ',','"');
+    $content_with_html = $parsed_out[2];
+
+    if (!$content_with_html) die('wrong $content_with_html');
+
+    $clean_content =  clean_content($content_with_html);
+
+    if (!$clean_content) die(' wrong $clean_content');
+
+    return $clean_content;
 }

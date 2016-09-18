@@ -3,6 +3,8 @@
 require_once "components/task_table.php";
 require_once "components/task_selector.php";
 
+$success = $error = '';
+
 if (!$report = db_get_by_id('cm_reports', $_REQUEST['report_id'])) {
     $error = 'Отчет не найден!';
 }
@@ -48,6 +50,11 @@ if (isset($_REQUEST['to_remake']) && is_admin()) {
     set_status(REPORT_STATUS_REMAKE);
 }
 
+if (isset($_REQUEST['check_in_tz']) && is_admin()) {
+    db_update('cm_tasks', array('last_tz_check' => 'update_waiting'), array('report_id' => $report['id']));
+    $success .= "Задания отправлены на проверку в TZ";
+}
+
 process_mass_changing();
 
 ?>
@@ -68,24 +75,38 @@ process_mass_changing();
                 </div>
             <? } else { ?>
 
-                <form action="" method="post" style="display:flex;justify-content: flex-end">
+                <form action="" method="post" style="display:flex;justify-content: flex-end" class="form-inline">
                     <? if (in_array($report['status'], array(REPORT_STATUS_NEW)) ) { ?>
-                        <button type="submit" name="to_review" class="btn btn-success">
-                            <span class="glyphicon glyphicon-ok"></span>
-                            Готово к проверке
-                        </button>
+                        <div class="form-group">
+                            <button type="submit" name="to_review" class="btn btn-success">
+                                <span class="glyphicon glyphicon-ok"></span>
+                                Готово к проверке
+                            </button>
+                        </div>
                     <? } ?>
                     <? if (is_admin() && !in_array($report['status'], array(REPORT_STATUS_COMPLETE)) ) { ?>
-                        <button type="submit" name="mark_complete" class="btn btn-success">
-                            <span class="glyphicon glyphicon-ok"></span>
-                            Утвердить отчет
-                        </button>
+                        <div class="form-group">
+                            <button type="submit" name="mark_complete" class="btn btn-success">
+                                <span class="glyphicon glyphicon-ok"></span>
+                                Утвердить отчет
+                            </button>
+                        </div>
+                    <? } ?>
+                    <? if (is_admin() && in_array($report['status'], array(REPORT_STATUS_REVIEW))) { ?>
+                        <div class="form-group">
+                            <button type="submit" name="check_in_tz" class="btn btn-info">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                                Проверить в TZ
+                            </button>
+                        </div>
                     <? } ?>
                     <? if (is_admin() && !in_array($report['status'], array(REPORT_STATUS_REMAKE))) { ?>
-                        <button type="submit" name="to_remake" class="btn btn-danger">
-                            <span class="glyphicon glyphicon-exclamation-sign"></span>
-                            Вернуть на доработки
-                        </button>
+                        <div class="form-group">
+                            <button type="submit" name="to_remake" class="btn btn-danger">
+                                <span class="glyphicon glyphicon-exclamation-sign"></span>
+                                Вернуть на доработки
+                            </button>
+                        </div>
                     <? } ?>
                 </form>
 
