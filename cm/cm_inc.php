@@ -74,7 +74,7 @@ function print_result(){
     <div class="alert alert-danger alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-        <?=$error?>
+        <?=nl2br($error)?>
     </div>
 <? } ?>
 
@@ -82,7 +82,7 @@ function print_result(){
     <div class="alert alert-success alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-        <?=$success?>
+        <?=nl2br($success)?>
     </div>
 <? } ?>
 <?
@@ -102,7 +102,7 @@ function get_clean_article_content($task) {
 
     $post_id = `cd ~/$project_name/public_html/ && \
                 echo "$result_url" | \
-                ~/wp eval-file post_ids.php --skip-plugins=rustolat`;
+                ~/wp eval-file ~/post_ids.php --skip-plugins=rustolat`;
 
     $cli_out = `cd ~/$project_name/public_html/ && \
                 ~/wp post list --fields=url,content --format=csv --post__in=$post_id`;

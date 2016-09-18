@@ -44,6 +44,12 @@ function comments() {
     return db_list('cm_task_comment', array('task_id' => $task['id']));
 }
 
+if (isset($_REQUEST['check_in_tz']) && is_admin()) {
+    $task['last_tz_check'] = 'update_waiting';
+    db_update('cm_tasks', $task);
+    $success .= "\nЗадание отправлено на проверку в TZ";
+}
+
 $users = to_flat_array(db_list('users'), 'id', 'name');
 
 ?>
@@ -67,7 +73,7 @@ $users = to_flat_array(db_list('users'), 'id', 'name');
                     <a target="_blank" href="<?= tz_url($task['tz_id']) ?>"><?= tz_url($task['tz_id']) ?></a>
                 </div>
                 <div class="form-group">
-                    <label for="resultUrlField">Ссылка на статью</label>
+                    <label for="resultUrlField"><a href="<?=$task['result_url']?>" target="_blank">Ссылка на статью</a></label>
                     <input type="text" value="<?=$task['result_url']?>" class="form-control" name="edit_task[result_url]" id="resultUrlField">
                 </div>
 
@@ -85,37 +91,49 @@ $users = to_flat_array(db_list('users'), 'id', 'name');
                     </select>
                 </div>
 
-                <button type="submit" class="btn btn-primary">
-                    <span class="glyphicon glyphicon-floppy-disk"></span>
-                    Сохранить
-                </button>
-
-                <? if (in_array($task['status'], array(STATUS_REMAKE, STATUS_NEW)) ) { ?>
-                    <button type="submit" name="review" class="btn btn-success">
-                        <span class="glyphicon glyphicon-ok"></span>
-                        Готово к проверке
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">
+                        <span class="glyphicon glyphicon-floppy-disk"></span>
+                        Сохранить
                     </button>
-                <? } ?>
 
-                <? if (in_array($task['status'], array(STATUS_REVIEW)) ) { ?>
-                    <button type="submit" name="back_to_new" class="btn btn-warning">
-                        <span class="glyphicon glyphicon-ok"></span>
-                        Вернуть в работу
-                    </button>
-                <? } ?>
+                    <? if (in_array($task['status'], array(STATUS_REMAKE, STATUS_NEW)) ) { ?>
+                        <button type="submit" name="review" class="btn btn-success">
+                            <span class="glyphicon glyphicon-ok"></span>
+                            Готово к проверке
+                        </button>
+                    <? } ?>
+                    <? if (in_array($task['status'], array(STATUS_REVIEW)) ) { ?>
+                        <button type="submit" name="back_to_new" class="btn btn-warning">
+                            <span class="glyphicon glyphicon-ok"></span>
+                            Вернуть в работу
+                        </button>
+                    <? } ?>
 
-                <? if (is_admin() && !in_array($task['status'], array(STATUS_REMAKE, STATUS_NEW))) { ?>
-                    <button type="submit" name="remake" class="btn btn-danger">
-                        <span class="glyphicon glyphicon-exclamation-sign"></span>
-                        Вернуть на доработку
-                    </button>
-                <? } ?>
+                </div>
+
+
+                <div class="form-group">
+                    <? if (is_admin() && !in_array($task['status'], array(STATUS_REMAKE, STATUS_NEW))) { ?>
+                        <button type="submit" name="remake" class="btn btn-danger">
+                            <span class="glyphicon glyphicon-exclamation-sign"></span>
+                            Вернуть на доработку
+                        </button>
+                    <? } ?>
+
+                    <? if (is_admin()) { ?>
+                        <button type="submit" name="check_in_tz" class="btn btn-info">
+                            <span class="glyphicon glyphicon-eye-open"></span>
+                            Проверить в TZ
+                        </button>
+                    <? } ?>
+                </div>
 
             </form>
 
             <?if ($task['last_tz_check'] && $task['last_tz_check'] != 'update_waiting') {?>
 
-                <div class="panel panel-info" style="margin: 50px 0;">
+                <div class="panel panel-info" style="margin: 20px 0;">
                     <div class="panel-heading">
                         <h3 class="panel-title">
                             Результаты последней проверки в TZ

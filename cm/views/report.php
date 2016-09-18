@@ -92,7 +92,7 @@ process_mass_changing();
                             </button>
                         </div>
                     <? } ?>
-                    <? if (is_admin() && in_array($report['status'], array(REPORT_STATUS_REVIEW))) { ?>
+                    <? if (is_admin()) { ?>
                         <div class="form-group">
                             <button type="submit" name="check_in_tz" class="btn btn-info">
                                 <span class="glyphicon glyphicon-eye-open"></span>
