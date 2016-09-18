@@ -1,7 +1,7 @@
 <?php
 
-function create_task_filter_view() {
-    global $filter, $statuses;
+function create_task_filter_view($filter, $count = '') {
+    global $statuses;
     ?>
     <div class="panel panel-default">
         <div class="panel-body">
@@ -9,11 +9,15 @@ function create_task_filter_view() {
             <div style="display: flex; justify-content: space-between;">
 
                 <div>
-                    <h4>Количество: <span class="label label-primary"><?=count(tasks($filter))?></span></h4>
+                    <h4>Количество: <span class="label label-primary"><?=$count?></span></h4>
                 </div>
 
                 <div>
                     <form class="form-inline" action="" method="get">
+                        <div class="form-group">
+                            <label for="titleField">Название</label>
+                            <input type="text" class="form-control" id="titleField" name="filter[title]" value="<?=array_get($filter, 'title', '')?>">
+                        </div>
                         <div class="form-group">
                             <label for="projectId">Проект</label>
                             <select class="form-control" id="projectId" name="filter[project_id]">
@@ -45,7 +49,7 @@ function create_task_filter_view() {
                         </div>
 
                         <button type="submit" class="btn btn-default">Применить</button>
-                        <button type="reset" name="filter[clear]" class="btn btn-default">Сбросить</button>
+                        <button type="submit" name="filter[clear]" class="btn btn-default">Сбросить</button>
                     </form>
                 </div>
             </div>

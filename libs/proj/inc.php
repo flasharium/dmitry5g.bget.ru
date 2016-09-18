@@ -34,11 +34,11 @@ function redirect($url) {
 /**
  * @return mixed
  */
-function array_get($array, $path) {
+function array_get($array, $path, $default = array()) {
     $result = $array;
     $parts = explode('.', $path);
     foreach ($parts as $part) {
-        $result = is_array($result) && isset($result[$part]) ? $result[$part] : array();
+        $result = is_array($result) && isset($result[$part]) ? $result[$part] : $default;
     }
     return $result;
 }

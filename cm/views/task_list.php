@@ -29,10 +29,16 @@ process_mass_changing();
 
 $filter = array('add' => ' and status IN (' . implode(',', array(STATUS_NEW, STATUS_REMAKE)) . ') ' );
 
-if (isset($_REQUEST['filter'])) {
-    $filter_project = isset($_REQUEST['filter']['project_id']) ? $_REQUEST['filter']['project_id'] : '';
-    $filter_status = isset($_REQUEST['filter']['status']) ? $_REQUEST['filter']['status'] : '';
-    if (!isset($_REQUEST['filter']['clear']) && ($filter_project || $filter_status)) {
+if ($request_filter = array_get($_REQUEST, 'filter')) {
+    if (isset($request_filter['clear'])) {
+        $request_filter = array();
+    }
+
+    $filter_project = array_get($request_filter, 'project_id');
+    $filter_status = array_get($request_filter, 'status');
+    $filter_title = array_get($request_filter, 'title');
+
+    if ($request_filter && ($filter_project || $filter_status || $filter_title)) {
         if ($filter_project) {
             $filter['project_id'] = $filter_project;
         }
@@ -40,9 +46,13 @@ if (isset($_REQUEST['filter'])) {
             $filter['status'] = $filter_status;
             unset($filter['add']);
         }
+        if ($filter_title) {
+            $filter['add'] = array_get($filter, 'add', '');
+            $filter['add'] .= " and title like '%$filter_title%' ";
+        }
     }
 }
-
+$count = count(tasks($filter));
 ?>
 
 <div class="container">
@@ -58,9 +68,9 @@ if (isset($_REQUEST['filter'])) {
                 <?}?>
             </div>
 
-            <?=create_task_filter_view()?>
+            <?=create_task_filter_view($request_filter, $count)?>
 
-            <? if (count(tasks($filter))) { ?>
+            <? if ($count) { ?>
                 <form action="" method="post" class="form-inline">
                     <div class="panel panel-default">
 

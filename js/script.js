@@ -44,9 +44,9 @@ function asyncRequest(data, onSuccess) {
     });
 }
 
-function createTreeView(isTouchDevice) {
+function createTreeView() {
     asyncRequest({project_id: projectId, action: 'list_groups'}, function (resp) {
-        myApp.treeView = new TreeView(isTouchDevice);
+        myApp.treeView = new TreeView(isTouchDevice());
         myApp.treeView.setView($(".keywords-groups").eq(0));
         myApp.treeView.setData(resp);
         myApp.treeView.redraw()
@@ -127,7 +127,10 @@ function updateTabWithDataset(dataset) {
         });
 
         if (isTouchDevice()) {
+
             $('.tab-content').prepend($(".tab-filters").eq(0))
+            $('body').css({'overflow-y': 'hidden'})
+
         } else {
             buildDraggableUI()
         }
@@ -185,7 +188,7 @@ $(document).ready(function () {
     initTabSwitching();
     initKeywordFilters();
     initSwitchPanelsButton();
-    createTreeView(isTouchDevice());
+    createTreeView();
 
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
