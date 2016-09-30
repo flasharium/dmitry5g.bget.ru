@@ -50,7 +50,7 @@ function db_get($table, $criteria, $order = '') {
     }
 }
 
-function db_list($table, $criteria = null, $fields = '*') {
+function db_list($table, $criteria = null, $fields = '*', $order = '') {
     $add = '';
     if ($criteria) {
         foreach ($criteria as $field => $value) {
@@ -63,7 +63,7 @@ function db_list($table, $criteria = null, $fields = '*') {
             }
         }
     }
-    $query = "select $fields from $table where 1 " . $add;
+    $query = "select $fields from $table where 1 " . $add . " $order ";
     $result = db_query($query);
 
     

@@ -43,6 +43,13 @@ body { background-color: #ffffff; }
 .panel { margin: 5px -10px; }
 .tab-pane { margin-top: -10px; }
 
+
+.comment_header * {color: #acacac;}
+.comment_content > img {
+  border: 5px solid #cfcfcf;
+  max-width: 100%;
+}
+
 @media (max-width: 990px) {
   .tab-content-fullscreen { height: calc(100vh - 140px); min-height: calc(100vh - 140px); }
   .root-groups { display: none; }

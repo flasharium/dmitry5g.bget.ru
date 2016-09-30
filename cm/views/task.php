@@ -41,13 +41,19 @@ if (isset($_REQUEST['comment'])) {
 
 function comments() {
     global $task;
-    return db_list('cm_task_comment', array('task_id' => $task['id']));
+    return db_list('cm_task_comment', array('task_id' => $task['id']), "*", 'order by id desc');
 }
 
 if (isset($_REQUEST['check_in_tz']) && is_admin()) {
     $task['last_tz_check'] = 'update_waiting';
     db_update('cm_tasks', $task);
     $success .= "\nЗадание отправлено на проверку в TZ";
+}
+
+if (isset($_REQUEST['approve_task']) && is_admin()) {
+    $task['status'] = STATUS_COMPLETE;
+    db_update('cm_tasks', $task);
+    $success .= "\nЗадание одобрено";
 }
 
 $users = to_flat_array(db_list('users'), 'id', 'name');
@@ -114,6 +120,13 @@ $users = to_flat_array(db_list('users'), 'id', 'name');
 
 
                 <div class="form-group">
+                    <? if (is_admin()) { ?>
+                        <button type="submit" name="approve_task" class="btn btn-success">
+                            <span class="glyphicon glyphicon-thumbs-up"></span>
+                            Одобрить
+                        </button>
+                    <? } ?>
+
                     <? if (is_admin() && !in_array($task['status'], array(STATUS_REMAKE, STATUS_NEW))) { ?>
                         <button type="submit" name="remake" class="btn btn-danger">
                             <span class="glyphicon glyphicon-exclamation-sign"></span>
@@ -161,20 +174,20 @@ $users = to_flat_array(db_list('users'), 'id', 'name');
                 <div class="panel-body">
                     <? foreach (comments() as $comment) { ?>
                         <div class="panel panel-default">
-                            <div class="panel-heading">
+                            <div class="panel-heading comment_header">
                                 <strong><?=$users[$comment['user_id']]?></strong>
                                 <i><?=date("Y-m-d H:i:s", $comment['ctime'])?></i>
                             </div>
-                            <div class="panel-body">
-                                <?= $comment['content'] ?>
+                            <div class="panel-body comment_content">
+                                <?= nl2br($comment['content']) ?>
                             </div>
                         </div>
                     <? } ?>
 
-                    <form action="" method="post">
+                    <form action="" method="post" style="margin-top: 40px;">
                         <h4>Добавить комментарий</h4>
                         <div class="form-group">
-                            <textarea class="form-control" rows="3" name="comment[content]"></textarea>
+                            <textarea class="form-control autoresizeTextarea" rows="3" name="comment[content]" ></textarea>
                         </div>
                         <div class="form-group">
                             <button type="submit" class="btn btn-default">Отправить</button>

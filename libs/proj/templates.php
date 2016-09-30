@@ -27,9 +27,13 @@ function insert_header($title = '') {
 
     <!-- jQuery UI -->
     <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js" integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E=" crossorigin="anonymous"></script>
+
+    <script src="/js/jackmoore-autosize-961af07/jquery.autosize.js"></script>
+
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.0/themes/cupertino/jquery-ui.css"/>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
+
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="mobile-web-app-capable" content="yes">

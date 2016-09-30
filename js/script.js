@@ -198,5 +198,7 @@ $(document).ready(function () {
 
     EventMachine.register('treeUpdated', onTreeUpdated)
 
+    $('.autoresizeTextarea').autosize()
+
 });
 
