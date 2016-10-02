@@ -18,14 +18,11 @@ if (isset($_REQUEST['login'])) {
         $hash = md5(trim($password));
         $crit = array('nick' => $username, 'pass' => $hash);
 
-//        if (isset($_REQUEST['create'])) {
-//            db_insert('users', $crit);
-//        }
 
         if(!$user = db_get('users', $crit)) break;
 
         $_SESSION['user_id'] = $user['id'];
-        redirect('/cm');
+        redirect('/' . (array_get($_REQUEST, 'source', '') ?: 'cm'));
     } while (0);
 }
 
@@ -46,16 +43,16 @@ insert_header();
                         </div>
                     <? } ?>
                     <form action="/cm/auth.php" id="loginForm" method="post">
+                      <input type="hidden" name="source" value="<?=array_get($_REQUEST, 'source', '')?>"/>
                         <div class="form-group input-group">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                            <input class="form-control" type="text" name='login[username]' placeholder="Логин"/>
+                            <input size="40" class="form-control" type="text" name='login[username]' placeholder="Логин"/>
                         </div>
                         <div class="form-group input-group">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                            <input class="form-control" type="password" name='login[password]' placeholder="Пароль"/>
+                            <input size="40" class="form-control" type="password" name='login[password]' placeholder="Пароль"/>
                         </div>
                         <div class="form-group">
-<!--                            <button name="create" type="submit" class="btn btn-def btn-block">Create</button>-->
                             <button type="submit" class="btn btn-def btn-block">Войти</button>
                         </div>
                     </form>

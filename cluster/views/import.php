@@ -14,7 +14,7 @@ if (isset($_POST['import_keys'])) {
     <title></title>
 </head>
 <body>
-<form action="/clustering/import.php" method="post">
+<form action="/cluster/views/import.php" method="post">
     <textarea name="import_keys" id="" cols="30" rows="10"></textarea>
     <button type="submit">Send</button>
 </form>

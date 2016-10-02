@@ -8,7 +8,7 @@
     <title></title>
     <script type="text/javascript">
         var token = /access_token=([-0-9a-zA-Z_]+)/.exec(document.location.hash)[1];
-        window.location.replace('http://dmitry5g.bget.ru/index.php?yandex_token=' + token);
+        window.location.replace('http://dmitry5g.bget.ru/dash/index.php?yandex_token=' + token);
     </script>
 </head>
 <body>

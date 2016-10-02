@@ -3,7 +3,7 @@
 require_once "../libs/proj/inc.php";
 
 if (!isset($_REQUEST['project_id'])) {
-    header('Location: /clustering/projects.php');
+    header('Location: /cluster/projects.php');
     die();
 }
 

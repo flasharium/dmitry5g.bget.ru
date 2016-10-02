@@ -1,6 +1,5 @@
 <?php
 
-
 define('STATUS_NEW', 1);
 define('STATUS_REVIEW', 2);
 define('STATUS_REMAKE', 3);

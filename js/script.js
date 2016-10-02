@@ -30,7 +30,7 @@ function asyncRequest(data, onSuccess) {
 
     $.ajax({
         type: 'POST',
-        url: '/clustering/async.php',
+        url: '/cluster/async.php',
         data: data,
         success: function (responce) {
             myApp.hidePleaseWait();
@@ -38,7 +38,7 @@ function asyncRequest(data, onSuccess) {
         },
         error: function (a, b, c) {
             myApp.hidePleaseWait();
-            alert("error: " + a.responseText);
+            // alert("error: " + a.responseText);
             console.log({a: a, b: b, c: c})
         }
     });

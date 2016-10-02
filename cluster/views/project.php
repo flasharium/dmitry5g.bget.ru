@@ -3,7 +3,7 @@
 require_once "../libs/proj/inc.php";
 
 if (!isset($_REQUEST['id'])) {
-    header('Location: /clustering/projects.php');
+    header('Location: /cluster/projects.php');
     die();
 }
 
@@ -12,7 +12,7 @@ $project = db_get_by_id('projects', $id);
 
 if (isset($_REQUEST['delete_phrase_id'])) {
     db_delete_by_id('phrases', $_REQUEST['delete_phrase_id']);
-    header("Location: /clustering/project.php?id=$id");
+    header("Location: /cluster/project.php?id=$id");
     die();
 }
 
@@ -42,11 +42,11 @@ if (isset($_REQUEST['create_phrases'])) {
 
 print_header("Project: $project[name] (#$project[id])");
 
-print_link("/clustering/grouping.php?project_id=$id", "Grouping");
+print_link("/cluster/grouping.php?project_id=$id", "Grouping");
 
 $keys = db_list('phrases', array('project_id' => $id));
 
-print_table($keys, '', "/clustering/project.php?id=$id&delete_phrase_id={ID}");
+print_table($keys, '', "/cluster/project.php?id=$id&delete_phrase_id={ID}");
 
 print_create_form('create_phrases', array('phrases_text' => 'textarea'));
 

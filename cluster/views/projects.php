@@ -14,7 +14,7 @@ if (isset($_REQUEST['project'])) {
 //
 //$project_list = db_list("projects");
 //
-//print_table($project_list, '/clustering/project.php?id={ID}', '/clustering/projects.php?delete_id={ID}');
+//print_table($project_list, '/cluster/project.php?id={ID}', '/cluster/projects.php?delete_id={ID}');
 //
 //print_create_form('project', array('name'));
 //
