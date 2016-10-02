@@ -1,5 +1,7 @@
 <?php
+//session_set_cookie_params(86400*365);
 session_start();
+
 ini_set('display_errors', true);
 error_reporting(E_ALL);
 

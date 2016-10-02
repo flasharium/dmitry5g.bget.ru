@@ -1,6 +1,7 @@
 <?php
-
+//session_set_cookie_params(86400*365);
 session_start();
+
 require_once "libs/proj/inc.php";
 require_once "cm/cm_inc.php";
 

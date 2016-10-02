@@ -35,7 +35,7 @@ body { background-color: #ffffff; }
 .drop-here { background-color: #dde9ff; border: 3px dashed #93bfeb; padding: 3px;}
 .bg-blue { background-color: #ddddff; }
 
-.tab-content-fullscreen { height: calc(100vh - 176px); overflow-y: scroll; }
+.tab-content-fullscreen { height: calc(100vh - 184px); overflow-y: scroll; }
 .tab-groups-fullscreen { height: calc(100vh - 95px); overflow-y: scroll; }
 .panel-heading-flex { display: flex; justify-content: space-between; }
 .root-keywords { }
@@ -95,4 +95,11 @@ div.well{
   width:200px;
   height:30px;
   background-image:url('http://placehold.it/200x30/000000/ffffff/&text=BRAND+LOGO');
+}
+
+.groupping__group_panel__header {
+  position: absolute;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
 }

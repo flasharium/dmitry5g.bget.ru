@@ -177,7 +177,7 @@ function initTabSwitching() {
 function onTreeUpdated() {
     var data = JSON.stringify(myApp.treeView.getData())
     asyncRequest({project_id: projectId, action: 'change_struct', "struct": data}, function(data){
-        console.log(data);
+
     })
 }
 

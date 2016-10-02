@@ -7,7 +7,6 @@ if (!isset($_REQUEST['project_id'])) {
     die();
 }
 
-insert_header();
 
 $id = $_REQUEST['project_id'];
 $project = db_get_by_id('projects', $id);
@@ -92,7 +91,7 @@ $keys = db_list('phrases', array('project_id' => $id));
 
 
             <div class="tab-content tab-content-fullscreen">
-                <div role="tabpanel" class="tab-pane active" id="free_keywords"></div>
+                <div role="tabpanel" class="tab-pane active" id="free_keywords" style="-webkit-overflow-scrolling: touch;"></div>
                 <div role="tabpanel" class="tab-pane" id="grouped_keywords"></div>
                 <div role="tabpanel" class="tab-pane" id="blacklist_keywords"></div>
             </div>
@@ -108,13 +107,15 @@ $keys = db_list('phrases', array('project_id' => $id));
             <div class="panel-heading panel-heading-flex">
                 <div>Группы</div>
 
-                <button type="button" class="btn btn-default btn-xs button-create-section" data-toggle="tooltip" data-placement="кшпре" title="Создать раздел">
+                <div class="groupping__group_panel__header">
+                  <button type="button" class="btn btn-default btn-xs button-create-section">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                </button>
+                  </button>
 
-                <button type="button" class="btn btn-default btn-xs button-switch-panels">
+                  <button type="button" class="btn btn-default btn-xs button-switch-panels">
                     <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                </button>
+                  </button>
+                </div>
             </div>
 
             <div class="panel-body tab-groups-fullscreen">
@@ -150,5 +151,3 @@ $keys = db_list('phrases', array('project_id' => $id));
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 <?
-
-insert_footer();

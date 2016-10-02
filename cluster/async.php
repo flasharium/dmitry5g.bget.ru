@@ -31,13 +31,12 @@ if ($action == 'list_groups') {
             if (isset($node['n'])) { // section
 
                 $sections[$section_id] = array(
-                    'id' => $section_id,
-                    'parent_id' => $section_id - 1,
+                    'id' => ++$section_id,
+                    'parent_id' => $current_section_id,
                     'title' => $node['n'],
                 );
 
                 parseNode($node['c'], $groups, $sections, $keywords, $section_id);
-                $section_id++;
 
             } elseif (isset($node['c'])) { // group
 
@@ -64,6 +63,7 @@ if ($action == 'list_groups') {
         'keywords' => array_values($data['keywords']),
         'sections' => array_values($data['sections']),
         'groups' => array_values($data['groups']),
+        'struct' => $struct,
     ));
     die;
 

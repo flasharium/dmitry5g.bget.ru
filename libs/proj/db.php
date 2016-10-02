@@ -75,8 +75,14 @@ function db_list($table, $criteria = null, $fields = '*', $order = '') {
     }
 }
 
-function db_delete_by_id($table, $id) {
-    db_query("delete from $table where id = $id");
+function db_delete_by_id($table, $ids) {
+    if (is_array($ids)) {
+        $where = "id IN (" . implode(',', $ids) . ') ';
+    } else {
+        $where = "id = $ids";
+    }
+    $query = "delete from $table where $where";
+    db_query($query);
 }
 
 function db_insert($table, $fields) {
@@ -132,7 +138,7 @@ function db_update($table, $fields, $crit = array()) {
     db_query($query);
 }
 
-function db_count($table, $fields) {
+function db_count($table, $fields = array()) {
     $where = '';
     foreach ($fields as $key => $value) {
         $where .= " and $key='$value'";

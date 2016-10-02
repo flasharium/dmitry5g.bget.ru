@@ -1,22 +1,11 @@
 <?php
 
-require_once "../libs/proj/inc.php";
-
-if (!isset($_REQUEST['id'])) {
-    header('Location: /cluster/projects.php');
-    die();
-}
-
-$id = $_REQUEST['id'];
+$id = $_REQUEST['project_id'];
 $project = db_get_by_id('projects', $id);
 
 if (isset($_REQUEST['delete_phrase_id'])) {
     db_delete_by_id('phrases', $_REQUEST['delete_phrase_id']);
-    header("Location: /cluster/project.php?id=$id");
-    die();
 }
-
-insert_header();
 
 if (isset($_REQUEST['create_phrases'])) {
     $phrases = explode("\n", $_REQUEST['create_phrases']['phrases_text']);
@@ -38,17 +27,19 @@ if (isset($_REQUEST['create_phrases'])) {
     db_insert_multiple('phrases', array('project_id', 'phrase', 'frequence'), $filtered);
 }
 
+?>
+    <div class="jumbotron">
+        <h1><?=$project['name']?></h1>
+        <p>Количество ключей: <?=db_count('phrases', array('project_id' => $id))?></p>
+        <p>
+          <a class="btn btn-primary btn-lg" href="/cluster?view=grouping&project_id=<?=$id?>" role="button">
+            Перейти к группировке
+          </a>
+        </p>
+    </div>
+<?
 
-
-print_header("Project: $project[name] (#$project[id])");
-
-print_link("/cluster/grouping.php?project_id=$id", "Grouping");
-
-$keys = db_list('phrases', array('project_id' => $id));
-
-print_table($keys, '', "/cluster/project.php?id=$id&delete_phrase_id={ID}");
-
-print_create_form('create_phrases', array('phrases_text' => 'textarea'));
-
-
-insert_footer();
+//print_link("/cluster/grouping.php?project_id=$id", "Grouping");
+//$keys = db_list('phrases', array('project_id' => $id));
+//print_table($keys, '', "/cluster/project.php?id=$id&delete_phrase_id={ID}");
+//print_create_form('create_phrases', array('phrases_text' => 'textarea'));

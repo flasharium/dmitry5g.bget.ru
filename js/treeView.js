@@ -425,6 +425,12 @@ TreeView = function (isTouchDevice) {
         dictSections = createDict(sections, 'parent_id');
         dictGroups = createDict(groups, 'section_id');
         dictKeys = createDict(keys, 'group_id')
+
+        console.log(JSON.stringify({
+            'dictSections' : dictSections,
+            'dictGroups' : dictGroups,
+            'dictKeys' : dictKeys,
+        }, null, 4));
     };
 
     function parseGroup(groupView) {
