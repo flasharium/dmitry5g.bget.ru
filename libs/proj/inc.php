@@ -7,6 +7,14 @@ require_once "db.php";
 require_once "templates.php";
 
 
+function long_session_start() {
+    $cookieLifetime = 365 * 24 * 60 * 60;
+    session_set_cookie_params($cookieLifetime);
+    session_start();
+    setcookie(session_name(), session_id(), time() + $cookieLifetime, '/');
+}
+long_session_start();
+
 function dump($val){
     echo '<pre>';
     print_r($val);

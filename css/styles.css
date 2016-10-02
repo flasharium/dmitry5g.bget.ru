@@ -35,8 +35,8 @@ body { background-color: #ffffff; }
 .drop-here { background-color: #dde9ff; border: 3px dashed #93bfeb; padding: 3px;}
 .bg-blue { background-color: #ddddff; }
 
-.tab-content-fullscreen { height: calc(100vh - 184px); overflow-y: scroll; }
-.tab-groups-fullscreen { height: calc(100vh - 95px); overflow-y: scroll; }
+.tab-content-fullscreen { height: calc(100vh - 184px); overflow-y: scroll; -webkit-overflow-scrolling: touch }
+.tab-groups-fullscreen { height: calc(100vh - 95px); overflow-y: scroll; -webkit-overflow-scrolling: touch }
 .panel-heading-flex { display: flex; justify-content: space-between; }
 .root-keywords { }
 .button-switch-panels { display: none; }

@@ -91,7 +91,7 @@ $keys = db_list('phrases', array('project_id' => $id));
 
 
             <div class="tab-content tab-content-fullscreen">
-                <div role="tabpanel" class="tab-pane active" id="free_keywords" style="-webkit-overflow-scrolling: touch;"></div>
+                <div role="tabpanel" class="tab-pane active" id="free_keywords"></div>
                 <div role="tabpanel" class="tab-pane" id="grouped_keywords"></div>
                 <div role="tabpanel" class="tab-pane" id="blacklist_keywords"></div>
             </div>
