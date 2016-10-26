@@ -47,7 +47,8 @@ function insert_dash_breadcrumbs($root, $views, $view) {
       <div class="col-md-12">
         <ol class="breadcrumb">
             <?
-            $end_url = end(array_keys($breadcrumbs));
+            $ar_keys = array_keys($breadcrumbs);
+            $end_url = end($ar_keys);
             foreach ($breadcrumbs as $url => $title) {
                 if ($url == $end_url) {
                     ?><li class="active"><?=$title?></li><?
