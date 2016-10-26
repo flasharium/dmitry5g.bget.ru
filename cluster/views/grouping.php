@@ -11,7 +11,7 @@ $project = db_get_by_id('projects', $id);
 
 if (array_get($_REQUEST, 'purge', false)) {
     db_delete('key_struct', array('project_id' => $id));
-    db_update('phrases', array( 'group_id' => 0, 'blacklist' => 0,));
+    db_update('phrases', array( 'group_id' => 0, 'blacklist' => 0), array('project_id' => $id));
 }
 
 $keys = db_list('phrases', array('project_id' => $id));

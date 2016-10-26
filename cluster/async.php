@@ -83,6 +83,7 @@ function list_dataset_handler() {
 
 function change_struct_handler() {
     global $id;
+
     db_insert('key_struct', array(
         'project_id' => $id,
         'data' => $_REQUEST['struct'],
@@ -103,8 +104,8 @@ function change_struct_handler() {
     preg_match_all('/(?<ids>\d+)/', $_REQUEST['struct'], $matches);
 
     if ($matches['ids']) {
-        db_update('phrases', array('project_id' => $id, 'group_id' => 0));
-        db_update('phrases', array('group_id' => 1, 'blacklist' => 0, 'id' => $matches['ids']));
+        db_update('phrases', array('group_id' => 0), array('project_id' => $id));
+        db_update('phrases', array('group_id' => 1, 'blacklist' => 0, 'id' => $matches['ids']), array('project_id' => $id));
     }
 
     return array(
