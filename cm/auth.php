@@ -18,6 +18,9 @@ if (isset($_REQUEST['login'])) {
         $hash = md5(trim($password));
         $crit = array('nick' => $username, 'pass' => $hash);
 
+        if (conf('registration_open') && isset($_REQUEST['create'])) {
+            db_insert('users', $crit);
+        }
 
         if(!$user = db_get('users', $crit)) break;
 
@@ -54,6 +57,9 @@ insert_header();
                         </div>
                         <div class="form-group">
                             <button type="submit" class="btn btn-def btn-block">Войти</button>
+                            <? if (conf('registration_open')) { ?>
+                              <button name="create" type="submit" class="btn btn-def btn-block">Создать пользователя</button>
+                            <? } ?>
                         </div>
                     </form>
                 </div>
