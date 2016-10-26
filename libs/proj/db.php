@@ -1,12 +1,9 @@
 <?php
 
-
-// dmitry5g_clust - [Hw^n8C*
-
-$user = 'dmitry5g_clust';
-$password = '[Hw^n8C*';
-$host = 'localhost';
-$db_name = 'dmitry5g_clust';
+$user = conf('db_user');
+$password = conf('db_password');
+$host = conf('db_host');
+$db_name = conf('db_name');
 
 $mysqli = new mysqli($host, $user, $password, $db_name);
 

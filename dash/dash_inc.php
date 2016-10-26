@@ -2,6 +2,9 @@
 
 require_once "../inc/common.inc.php";
 
+if (!isset($_SESSION['user_id'])) {
+    return redirect("/cm/auth.php?source=dash");
+}
 
 function insert_dash_connect_block($authUrl, $ga_connect, $ya_connect)
 {

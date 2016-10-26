@@ -15,7 +15,7 @@ $client->setClientId("783339917195-31t7vm567pgvrat30lt0p72uf4lmkdcq.apps.googleu
 $client->setClientSecret("67DeEScrD5RPhJsJDXyhoB09");
 $client->setRedirectUri('http://' . $_SERVER['HTTP_HOST']);
 $client->addScope(Google_Service_AdSense::ADSENSE_READONLY);
-$client->setRedirectUri('http://dmitry5g.bget.ru/dash');
+$client->setRedirectUri('http://'.conf('hostname').'/dash');
 
 if (isset($_REQUEST['ga_logout'])) {
     unset($_SESSION['access_token']);
@@ -29,7 +29,7 @@ if (isset($_REQUEST['ym_logout'])) {
 if (isset($_GET['code'])) {
     $client->authenticate($_GET['code']);
     $_SESSION['access_token'] = $client->getAccessToken();
-    $redirect = 'http://dmitry5g.bget.ru/dash';
+    $redirect = 'http://'.conf('hostname').'/dash';
     header('Location: ' . filter_var($redirect, FILTER_SANITIZE_URL));
 }
 
@@ -117,6 +117,15 @@ if ($ya_connect) {
 }
 
 ?>
+
+<? if (!conf('alpha')) {?>
+  <div class="row">
+    <div class="col-md-12">
+        <? require_once 'views/alpha.php'; ?>
+    </div>
+  </div>
+<? die; } ?>
+
 
 <? if ($ga_connect && $ya_connect) {?>
   <div class="row">

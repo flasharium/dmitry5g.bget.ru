@@ -21,8 +21,10 @@ function insert_dash_navbar($mode = '')
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li class='<?=$mode=='cluster'?'active':''?>'><a href="#" onclick="window.location.href='/cluster'" >Cluster</a></li>
+                  <? if (conf('alpha')) { ?>
                     <li class='<?=$mode=='cm'?'active':''?>'><a href="#" onclick="window.location.href='/cm'">CM</a></li>
                     <li class='<?=$mode=='tools'?'active':''?>'><a href="#" onclick="window.location.href='/tools'">Tools</a></li>
+                  <? } ?>
                 </ul>
             </div><!--/.nav-collapse -->
         </div>
