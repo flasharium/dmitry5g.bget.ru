@@ -3,7 +3,10 @@
 ini_set('display_errors', true);
 error_reporting(E_ALL);
 
-require_once dirname(__FILE__) . "/../../config.php";
+set_include_path(get_include_path() . PATH_SEPARATOR . dirname(__FILE__));
+set_include_path(get_include_path() . PATH_SEPARATOR . dirname(__FILE__) . "/../../");
+
+require_once "config.php";
 require_once "db.php";
 require_once "templates.php";
 
