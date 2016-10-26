@@ -249,15 +249,15 @@ function createCommonActions() {
 }
 
 function createKeymap() {
-    function addHotckeyButton(forKeys, hotkey, desc, func) {
-        var button = $('<button role="button" class="btn btn-xs btn-default">' + hotkey + '</button>')
+    function addHotckeyButton(forKeys, hotkey, title, desc, func) {
+        var button = $('<button role="button" class="btn btn-xs btn-default">' + title + '</button>')
         button.on('click', func)
         button.prop('title', desc)
         $('.panel-footer-' + (forKeys?'keywords':'groups')).eq(0).append(button)
         key(hotkey, func);
     }
-    function keyButton(hotkey, desc, func) {addHotckeyButton(true, hotkey, desc, func)}
-    function groupButton(hotkey, desc, func) {addHotckeyButton(false, hotkey, desc, func)}
+    function keyButton(hotkey, title, desc, func) {addHotckeyButton(true, hotkey, title, desc, func)}
+    function groupButton(hotkey, title, desc, func) {addHotckeyButton(false, hotkey, title, desc, func)}
 
     ///////////////////////////////////////////
 
@@ -278,43 +278,43 @@ function createKeymap() {
 
     ///////////////////////////////////////////
 
-    keyButton('⌘+A', 'Выделить всё', function(){
+    keyButton('⌘+A, ctrl+A', '⌘+A', 'Выделить всё', function(){
         $('.keyword-item input[type=checkbox]').prop('checked', true)
         EventMachine.send('change_selected_keywords_set')
         return false;
     })
 
-    keyButton('⌘+C', 'Создать группу', function(){
+    keyButton('⌘+C, ctrl+C', '⌘+C', 'Создать группу', function(){
         EventMachine.send('TreeViewEvent Move_selected_ungrouped_keywords_to_droppable_zone')
         EventMachine.send('treeUpdated')
         return false;
     })
 
-    keyButton('⌘+⌥+C', 'Дополнить последнюю круппу', function(){
+    keyButton('⌘+⌥+C, ctrl+alt+C', '⌘+⌥+C', 'Дополнить последнюю круппу', function(){
         EventMachine.send('TreeViewEvent Move_selected_ungrouped_keywords_to_last_modified_group')
         EventMachine.send('treeUpdated')
         return false;
     })
 
-    keyButton('⌘+D', 'Снять выделение', function(){
+    keyButton('⌘+D, ctrl+D', '⌘+D', 'Снять выделение', function(){
         $('.keyword-item input[type=checkbox]').prop('checked', false)
         EventMachine.send('change_selected_keywords_set')
         return false;
     })
 
-    keyButton('⌘+G', 'В корзину', function(){
+    keyButton('⌘+G, ctrl+G', '⌘+G', 'В корзину', function(){
         EventMachine.send('Move_selected_ungrouped_keywords_to_trash')
         return false;
     })
 
-    keyButton('⌘+⌥+G', 'Восстановить', function(){
+    keyButton('⌘+⌥+G, ctrl+alt+G', '⌘+⌥+G', 'Восстановить', function(){
         EventMachine.send('Move_selected_keywords_from_trash')
         return false;
     })
 
     //////////////////////////////////////////
 
-    groupButton('⌘+S', 'Создать группу', function(){
+    groupButton('⌘+S, ctrl+S', 'Создать группу', function(){
         EventMachine.send('Show_modal_for_section_creating')
         return false;
     })
