@@ -62,29 +62,7 @@ function reports($filter = array()) {
 }
 
 function users() {
-    return db_list('users');
-}
-
-function print_result(){
-    global $error, $success;
-?>
-
-<? if ($error) { ?>
-    <div class="alert alert-danger alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-        <?=nl2br($error)?>
-    </div>
-<? } ?>
-
-<? if ($success) { ?>
-    <div class="alert alert-success alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-        <?=nl2br($success)?>
-    </div>
-<? } ?>
-<?
+    return array_hash(db_list('users'));
 }
 
 function clean_content($content) {
@@ -99,12 +77,16 @@ function get_clean_article_content($task) {
 
     $project_name = $project['name'];
 
-    $post_id = `cd ~/$project_name/public_html/ && \
-                echo "$result_url" | \
-                ~/wp eval-file ~/post_ids.php --skip-plugins=rustolat`;
+    $cmd = "cd ~/$project_name/public_html/ && 
+            echo \"$result_url\" | 
+            ~/wp eval-file ~/post_ids.php --skip-plugins=rustolat";
 
-    $cli_out = `cd ~/$project_name/public_html/ && \
-                ~/wp post list --fields=url,content --format=csv --post__in=$post_id`;
+    $post_id = `$cmd`;
+
+    $cli_output_cmd = "cd ~/$project_name/public_html/ && 
+        ~/wp post list --fields=url,content --format=csv --post__in=$post_id";
+
+    $cli_out = `$cli_output_cmd`;
 
     if (!$cli_out) die('wrong $cli_out');
 

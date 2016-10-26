@@ -100,7 +100,9 @@ function get_all_groups() {
         $pattern = '/<a href="\/keys\/view\/index\?id=(?<id>\d+)"\s*class="project_url">(?<key>.+?)<\/a>/U';
         preg_match_all($pattern, $content, $matches);
 
-        $keys = array_merge($keys, array_combine($matches['key'], $matches['id']));
+        if ($matches['key'] && $matches['id']) {
+            $keys = array_merge($keys, array_combine($matches['key'], $matches['id']));
+        }
 
         $page = 2;
         while (strpos($content, "/keys/list/index?project_id=$id&amp;page=$page") !== false) {

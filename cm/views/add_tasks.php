@@ -25,7 +25,7 @@ if (isset($_REQUEST['create_tasks'])) {
         }
 
         db_insert('cm_tasks', array(
-            'tz_id' => $tz_id,
+            'tz_id'      => $tz_id,
             'result_url' => $result_url,
             'project_id' => $project_id
         ));
@@ -61,48 +61,68 @@ if (array_get($_REQUEST, 'action') == 'refresh_group_titles') {
 ?>
 
 <div class="container">
-    <div class="row">
-        <div class="col-md-12">
+  <div class="row">
+    <div class="col-md-12">
 
-            <?=print_result()?>
+        <? print_result() ?>
 
-            <form action="">
+      <form action="" method="post">
 
-                <h4>Добавить задания</h4>
-                <div class="form-group">
-                    <textarea class="form-control" rows="5" name="create_tasks[content]"></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="projectId">Проект</label>
-                    <select class="form-control" id="projectId" name="create_tasks[project_id]">
-                        <? foreach(projects() as $project) { ?>
-                            <option value="<?=$project['id']?>"><?=$project['name']?></option>
-                        <? } ?>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="userId">Контент-менеджер</label>
-                    <select class="form-control" id="userId" name="create_tasks[user_id]">
-                        <option value="">-</option>
-                        <? foreach(users() as $user) { ?>
-                            <option value="<?=$user['id']?>"><?=$user['name']?></option>
-                        <? } ?>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <button type="submit" class="btn btn-default">Отправить</button>
-                </div>
-
-            </form>
-
+        <h4>Добавить задания</h4>
+        <div class="panel panel-info">
+          <div class="panel-body">
+            <p>Добавлять задания можно в двух форматах, без ссылки на результат:
+            <pre>/keys/view/index?id=1396721
+/keys/view/index?id=1396706
+/keys/view/index?id=1396690</pre>
+            и со ссылкой на уже обубликованный материал (в случае экспорта из Excell):
+            <pre>http://site.ru/url1 /keys/view/index?id=1396721
+http://site.ru/url1 /keys/view/index?id=1396706
+http://site.ru/url1 /keys/view/index?id=1396690</pre>
+            </p>
+            <p>
+              Для того чтобы забрать список ID из TZ можно выполнить код в консоли браузера на странице со списком заданий:
+              <br>
+              <code>a = '';jQuery('#key-group-list > li > div.t_cell.word_break_bd.v_align.b--width3 > a').each(function(){a += "\n" + ($(this).attr('href'))}); a</code>
+            </p>
+          </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <a href="/cm?view=add_tasks&action=refresh_group_titles" class="btn btn-default" role="button"><span class="glyphicon glyphicon-refresh"></span> Обновить названия</a>
+
+        <div class="form-group">
+          <textarea class="form-control" rows="5" name="create_tasks[content]"></textarea>
         </div>
+
+        <div class="form-group">
+          <label for="projectId">Проект</label>
+          <select class="form-control" id="projectId" name="create_tasks[project_id]">
+              <? foreach (projects() as $project) { ?>
+                <option value="<?= $project['id'] ?>"><?= $project['name'] ?></option>
+              <? } ?>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="userId">Контент-менеджер</label>
+          <select class="form-control" id="userId" name="create_tasks[user_id]">
+            <option value="">-</option>
+              <? foreach (users() as $user) { ?>
+                <option value="<?= $user['id'] ?>"><?= $user['name'] ?></option>
+              <? } ?>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <button type="submit" class="btn btn-default">Отправить</button>
+        </div>
+
+      </form>
+
     </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <a href="/cm?view=add_tasks&action=refresh_group_titles" class="btn btn-default" role="button"><span
+          class="glyphicon glyphicon-refresh"></span> Обновить названия</a>
+    </div>
+  </div>
 </div>

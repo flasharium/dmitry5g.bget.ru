@@ -2,6 +2,7 @@
 
 function insert_header($title = '')
 {
+  function nocache(){if (true) {return "?nocache=".time();}}
     ?>
   <!doctype html>
   <html lang="en-US">
@@ -31,12 +32,14 @@ function insert_header($title = '')
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.0/themes/cupertino/jquery-ui.css"/>
 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link rel="stylesheet" href="/css/styles.css"/>
-    <link rel="stylesheet" href="/css/google-logo.css"/>
+    <link rel="stylesheet" href="/css/styles.css<?=nocache()?>"/>
+    <link rel="stylesheet" href="/css/google-logo.css<?=nocache()?>"/>
 
-    <script type="text/javascript" src="../../js/EventMachine.js"></script>
-    <script type="text/javascript" src="../../js/treeView.js"></script>
-    <script type="text/javascript" src="../../js/script.js"></script>
+    <script type="text/javascript" src="../../js/keymaster.js<?=nocache()?>"></script>
+    <script type="text/javascript" src="../../js/stuff.js<?=nocache()?>"></script>
+    <script type="text/javascript" src="../../js/EventMachine.js<?=nocache()?>"></script>
+    <script type="text/javascript" src="../../js/treeView.js<?=nocache()?>"></script>
+    <script type="text/javascript" src="../../js/script.js<?=nocache()?>"></script>
 
 
     <meta name="mobile-web-app-capable" content="yes">
@@ -191,4 +194,26 @@ function task_url($id)
 function report_url($id)
 {
     return '/cm?view=report&report_id=' . intval($id);
+}
+
+function print_result(){
+    global $error, $success;
+    ?>
+
+    <? if ($error) { ?>
+    <div class="alert alert-danger alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <?=nl2br($error)?>
+    </div>
+    <? } ?>
+
+    <? if ($success) { ?>
+    <div class="alert alert-success alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+        <?=nl2br($success)?>
+    </div>
+    <? } ?>
+    <?
 }

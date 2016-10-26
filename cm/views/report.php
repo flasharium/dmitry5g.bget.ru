@@ -112,13 +112,19 @@ process_mass_changing();
 
                 <form action="" method="post" class="form-inline">
                     <div class="panel panel-default">
-                        <div class="panel-body">
-                            <?=create_task_selector()?>
-                        </div>
+                        <? if (is_admin()) { ?>
+                          <div class="panel-body">
+                              <?=create_task_selector()?>
+                          </div>
+                        <? } ?>
+
                         <?=task_table_view($filter, $projects, $users)?>
-                        <div class="panel-footer">
-                            <?=create_task_selector()?>
-                        </div>
+
+                        <? if (is_admin()) { ?>
+                          <div class="panel-footer">
+                              <?=create_task_selector()?>
+                          </div>
+                        <? } ?>
                     </div>
                 </form>
             <? } ?>

@@ -85,6 +85,23 @@ function db_delete_by_id($table, $ids) {
     db_query($query);
 }
 
+function db_delete($table, $criteria = array()) {
+    $add = '';
+    if ($criteria) {
+        foreach ($criteria as $field => $value) {
+            if ($field == 'add') {
+                $add .= " $value ";
+            } elseif (is_array($value)) {
+                $add .= " and $field IN (" . implode(',', $value) . ") ";
+            } else {
+                $add .= " and $field = '$value' ";
+            }
+        }
+    }
+    $query = "delete from $table where 1 $add";
+    db_query($query);
+}
+
 function db_insert($table, $fields) {
     $query = "INSERT INTO `$table` (`id`, `" . implode('`,`', array_keys($fields))
         ."`) VALUES (NULL, '".implode('\',\'', array_values($fields))
@@ -119,7 +136,7 @@ function db_update($table, $fields, $crit = array()) {
     }
     $set = implode(',', $set);
     if (isset($fields['id'])) {
-        if (is_string($fields['id'])) {
+        if (is_string($fields['id']) || is_integer($fields['id'])) {
             $where = " and id = " . $fields['id'];
         } elseif (is_array($fields['id'])) {
             $where = " and id in (" . implode(',', $fields['id']) . ') ';
@@ -140,8 +157,15 @@ function db_update($table, $fields, $crit = array()) {
 
 function db_count($table, $fields = array()) {
     $where = '';
-    foreach ($fields as $key => $value) {
-        $where .= " and $key='$value'";
+
+    foreach ($fields as $field => $value) {
+        if ($field == 'add') {
+            $where .= " $value ";
+        } elseif (is_array($value)) {
+            $where .= " and $field IN (" . implode(',', $value) . ") ";
+        } else {
+            $where .= " and $field = '$value' ";
+        }
     }
 
     $query = "SELECT COUNT(*) FROM $table WHERE 1 $where";

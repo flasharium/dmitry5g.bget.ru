@@ -1,6 +1,6 @@
 <?php
 
-require_once "../libs/proj/inc.php";
+require_once "clust_inc.php";
 header('Content-Type: application/json');
 
 if (!isset($_REQUEST['project_id'])) json_error('project_id missing!');
@@ -9,68 +9,49 @@ $id = $_REQUEST['project_id'];
 if (!isset($_REQUEST['action'])) json_error('action missing');
 $action = $_REQUEST['action'];
 
-if ($action == 'list_groups') {
+$routing = array(
+//  'action_name'        => 'function_name'
+    'list_groups'        => 'list_groups_handler',
+    'list_dataset'       => 'list_dataset_handler',
+    'change_struct'      => 'change_struct_handler',
+    'move_to_trash'      => 'move_to_trash_handler',
+    'restore_from_trash' => 'restore_from_trash_handler',
+    'unset_group_ids'    => 'unset_group_ids_handler',
+    'create_phrases'     => 'create_phrases_handler',
+);
 
-    $keywords = array();
-    foreach (db_list('phrases', array('project_id' => $id, 'add' => 'and group_id > 0'), 'id, phrase, frequence, group_id') as $keyword) {
-        $keywords[$keyword['id']] = $keyword;
-    }
-
-    function parseNode($node, &$groups, &$sections, &$keywords, $current_section_id = 0) {
-        static $section_id = 1;
-        static $group_id = 1;
-
-        if (is_array($node) && isset($node[0]) && is_array($node[0])) {
-
-            foreach ($node as $child) {
-                parseNode($child, $groups, $sections, $keywords, $current_section_id);
-            }
-
-        } else {
-
-            if (isset($node['n'])) { // section
-
-                $sections[$section_id] = array(
-                    'id' => ++$section_id,
-                    'parent_id' => $current_section_id,
-                    'title' => $node['n'],
-                );
-
-                parseNode($node['c'], $groups, $sections, $keywords, $section_id);
-
-            } elseif (isset($node['c'])) { // group
-
-                $groups[$group_id] = array(
-                    'id' => $group_id,
-                    'section_id' => $current_section_id,
-                );
-
-                foreach ($node['c'] as $key_id) {
-                    $keywords[$key_id]['group_id'] = $group_id;
-                }
-
-                $group_id++;
-            }
-        }
-    }
-
-    $data = array('keywords' => $keywords, 'groups' => array(), 'sections' => array());
-    $struct = db_get('key_struct', array('project_id' => $id), "order by id desc");
-    $struct = json_decode($struct['data'], true);
-    parseNode($struct, $data['groups'], $data['sections'], $data['keywords']);
-
-    echo json_encode(array(
-        'keywords' => array_values($data['keywords']),
-        'sections' => array_values($data['sections']),
-        'groups' => array_values($data['groups']),
-        'struct' => $struct,
-    ));
-    die;
-
+function create_phrases_handler() {
+    global $id;
+    $raw_phrases = array_get($_REQUEST, 'phrases_raw_text', '');
+    $filtered = create_unique_phrases($raw_phrases, $id);
+    return array('created_count' => $filtered);
 }
 
-if ($action == 'list_dataset') {
+function unset_group_ids_handler() {
+    if (!$ids = array_get($_REQUEST, 'ids')) return false;
+    db_update('phrases', array('group_id' => 0, 'id' => $ids));
+    return array('unset_group_id_for_phrases' => $ids);
+}
 
+function restore_from_trash_handler() {
+    if (!$ids = array_get($_REQUEST, 'ids')) return false;
+    db_update('phrases', array('blacklist' => 0, 'id' => $ids));
+    return array('restored_from_blacklist' => $ids);
+}
+
+function move_to_trash_handler() {
+    if (!$ids = array_get($_REQUEST, 'ids')) return false;
+    db_update('phrases', array('blacklist' => 1, 'id' => $ids));
+    return array('new_blacklist_ids' => $ids);
+}
+
+function list_groups_handler() {
+    global $id;
+    return get_struct_data($id);
+}
+
+function list_dataset_handler() {
+    global $id;
     $dataset = isset($_REQUEST['dataset']) ? $_REQUEST['dataset'] : 'free_keywords';
     $add = '';
     $datasets = array(
@@ -95,12 +76,13 @@ if ($action == 'list_dataset') {
 
 
     $criteria = array_merge(array('project_id' => $id, 'add' => $add), $datasets[$dataset]);
-    $keys = db_list('phrases', $criteria, 'id, phrase, frequence');
+    $keys = db_list('phrases', $criteria, 'id, phrase, frequence', ' order by frequence desc ');
 
-    echo json_encode($keys);
+    return $keys;
 }
 
-if ($action == 'change_struct') {
+function change_struct_handler() {
+    global $id;
     db_insert('key_struct', array(
         'project_id' => $id,
         'data' => $_REQUEST['struct'],
@@ -119,13 +101,33 @@ if ($action == 'change_struct') {
             );");
 
     preg_match_all('/(?<ids>\d+)/', $_REQUEST['struct'], $matches);
+
     if ($matches['ids']) {
         db_update('phrases', array('project_id' => $id, 'group_id' => 0));
-        db_update('phrases', array('group_id' => 1, 'id' => $matches['ids']));
+        db_update('phrases', array('group_id' => 1, 'blacklist' => 0, 'id' => $matches['ids']));
     }
 
-    echo json_encode(array(
+    return array(
         'status' => 'success',
         'ids' => $matches['ids'],
-    ));
+    );
 }
+
+$result = array();
+
+if ($func = array_get($routing, $action, false)) {
+    $result = $func();
+    if (!$result) {
+        $result = array(
+            'status' => 'error',
+            'msg' => 'wrong request data',
+        );
+    }
+} else {
+    $result = array(
+        'status' => 'error',
+        'msg' => 'unknown action',
+    );
+}
+
+echo json_encode($result);

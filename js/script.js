@@ -1,43 +1,19 @@
 log = console.log;
-
-var myApp;
-myApp = myApp || (function () {
-    var pleaseWaitDiv = $('<div class="modal fade bs-example-modal-sm" tabindex="-1" aria-labelledby="mySmallModalLabel"> <div class="modal-dialog modal-sm center-block" role="document"> <div class="modal-content center-block"> <h2 class="center-block"> <span class="badge"><span class="glyphicon glyphicon-cloud"></span></span> Loading...</h2> </div> </div> </div>');
-    var needToShow = false;
-    return {
-        showPleaseWait: function () {
-            needToShow = true;
-            setTimeout(function () {
-                if (needToShow) {
-                    pleaseWaitDiv.modal();
-                }
-            }, 1000)
-
-        },
-        hidePleaseWait: function () {
-            needToShow = false;
-            pleaseWaitDiv.modal('hide');
-        }
-    };
-})();
+var clusterNamespace = clusterNamespace || {};
 
 function isTouchDevice() {
     return 'ontouchstart' in document.documentElement;
 }
 
 function asyncRequest(data, onSuccess) {
-    myApp.showPleaseWait();
-
     $.ajax({
         type: 'POST',
         url: '/cluster/async.php',
         data: data,
         success: function (responce) {
-            myApp.hidePleaseWait();
             onSuccess(responce)
         },
         error: function (a, b, c) {
-            myApp.hidePleaseWait();
             // alert("error: " + a.responseText);
             console.log({a: a, b: b, c: c})
         }
@@ -45,11 +21,17 @@ function asyncRequest(data, onSuccess) {
 }
 
 function createTreeView() {
+    var loader = $('<div id="groupsLoader" class="loader-wrapper"><div class="loader"/></div>').show()
+    $('.keywords-groups').hide().parent().append(loader)
+
     asyncRequest({project_id: projectId, action: 'list_groups'}, function (resp) {
-        myApp.treeView = new TreeView(isTouchDevice());
-        myApp.treeView.setView($(".keywords-groups").eq(0));
-        myApp.treeView.setData(resp);
-        myApp.treeView.redraw()
+        clusterNamespace.treeView = new TreeView(isTouchDevice());
+        clusterNamespace.treeView.setView($(".keywords-groups").eq(0));
+        clusterNamespace.treeView.setData(resp);
+        clusterNamespace.treeView.redraw()
+
+        $('#groupsLoader').remove()
+        $('.keywords-groups').show()
     })
 }
 
@@ -65,16 +47,21 @@ function buildDraggableUI() {
             if (selected.length === 0) {
                 selected = $(this);
             }
-            var container = $('<div></div>').attr('id', 'draggingContainer');
+            var container = $('<div></div>').attr('id', 'draggingContainer').css({'width' : selected.css('width')});
             container.append(selected.clone());
             return container;
         }
     });
+}
 
-
+function updateCurrentDataset() {
+    var dataset = $("#myTabs").find(".active a").attr('aria-controls');
+    updateTabWithDataset(dataset)
 }
 
 function updateTabWithDataset(dataset) {
+    $('.tab-pane.active').hide().parent().append($('<div class="keysLoader loader-wrapper"><div class="loader"/></div>').show())
+
     var filters = [];
     $('.keyword-filter').each(function () {
         filters.push($(this).val())
@@ -115,14 +102,21 @@ function updateTabWithDataset(dataset) {
             ul.append(li);
         }
 
-        var root = $('#' + dataset).empty().append(ul);
+        $('#' + dataset).empty().append(ul);
         $("ul, li").disableSelection();
 
         ul.find(".keyword-item").each(function (item) {
             var self = $(this);
             var checkbox = self.find("input[type=checkbox]").eq(0);
             checkbox.on('change', function (val) {
-                self.toggleClass('list-item-checked').toggleClass('ui-draggable-dragging ')
+
+                // if (checkbox.prop('checked')) {
+                //     self.addClass('list-item-checked').addClass('ui-draggable-dragging')
+                // } else {
+                //     self.removeClass('list-item-checked').removeClass('ui-draggable-dragging')
+                // }
+
+                EventMachine.send('change_selected_keywords_set')
             })
         });
 
@@ -135,8 +129,21 @@ function updateTabWithDataset(dataset) {
             buildDraggableUI()
         }
 
+        $('.keysLoader').remove()
+        $('.tab-pane.active').show()
+
+
         $(this).tab('show');
 
+        $("#myTabs a").each(function(){
+            var tabName = $(this).attr('aria-controls')
+            if (tabName != dataset) {
+                $('#' + tabName).html('')
+            }
+        });
+
+        EventMachine.send('change_selected_keywords_set')
+        EventMachine.send('need_to_update_statistics')
     });
 }
 
@@ -161,8 +168,7 @@ function initKeywordFilters() {
 
     $('.keyword-filter-clear').on('click', function () {
         $(this).parents('.input-group').eq(0).find('.keyword-filter').eq(0).val('');
-        var dataset = $("#myTabs").find(".active a").attr('aria-controls');
-        updateTabWithDataset(dataset)
+        updateCurrentDataset()
     });
 }
 
@@ -174,10 +180,184 @@ function initTabSwitching() {
     });
 }
 
-function onTreeUpdated() {
-    var data = JSON.stringify(myApp.treeView.getData())
-    asyncRequest({project_id: projectId, action: 'change_struct', "struct": data}, function(data){
+function createCommonActions() {
+    EventMachine.register('treeUpdated', function () {
+        var data = JSON.stringify(clusterNamespace.treeView.getData())
+        asyncRequest({project_id: projectId, action: 'change_struct', "struct": data}, function (data) {
+            EventMachine.send('need_to_update_statistics')
+        })
+    })
 
+    EventMachine.register('need_to_update_statistics', function(){
+        var items = $('.keyword-item')
+        var count = 0,
+            totalFreq = 0
+        items.each(function(){ totalFreq += parseInt($(this).attr('frequence')); count += 1; })
+        $('.panel-footer-keywords-statistic').eq(0).text("{0} / {1}".format(count, totalFreq))
+    })
+
+    EventMachine.register('Move_selected_ungrouped_keywords_to_trash', function(){
+        var selected = $('.keyword-item input:checked').parents('li');
+        var ids = [];
+        selected.each(function(){ ids.push($(this).attr('keyId')) })
+        selected.remove()
+
+        EventMachine.send('ServerRequest move_keywords_to_trash', ids)
+    })
+
+    EventMachine.register('Move_selected_keywords_from_trash', function(){
+        var selected = $('.keyword-item input:checked').parents('li');
+        var ids = [];
+        selected.each(function(){ ids.push($(this).attr('keyId')) })
+        selected.remove()
+
+        asyncRequest({project_id: projectId, action: 'restore_from_trash', ids: ids}, function (resp) {
+            console.log(resp);
+        })
+    })
+
+    EventMachine.register('ServerRequest unset_groupId_for_keys_by_ids', function(ids){
+        asyncRequest({project_id: projectId, action: 'unset_group_ids', ids: ids}, function (resp) {
+            updateCurrentDataset()
+        })
+    })
+
+    EventMachine.register('ServerRequest move_keywords_to_trash', function(ids){
+        asyncRequest({project_id: projectId, action: 'move_to_trash', ids: ids}, function (resp) {
+            console.log(resp);
+        })
+    })
+
+    EventMachine.register('change_selected_keywords_set', function(){
+        var selected = $('.keyword-item input:checked').parents('li')
+        if (selected.length > 0) {
+            var total = 0
+            selected.each(function(){
+                total += parseInt($(this).attr('frequence'))
+            })
+            var infoBlock = $('.panel-footer-keywords').eq(0).find('.panel-footer-keywords-info').eq(0)
+            if (infoBlock.length == 0) {
+                infoBlock = $('<span class="label label-primary panel-footer-keywords-info center-content"></span>')
+                $('.panel-footer-keywords').eq(0).append(infoBlock)
+            }
+            infoBlock.eq(0).text(selected.length + ' / ' + total)
+        } else {
+            $('.panel-footer-keywords-info').remove()
+        }
+    })
+
+}
+
+function createKeymap() {
+    function addHotckeyButton(forKeys, hotkey, desc, func) {
+        var button = $('<button role="button" class="btn btn-xs btn-default">' + hotkey + '</button>')
+        button.on('click', func)
+        button.prop('title', desc)
+        $('.panel-footer-' + (forKeys?'keywords':'groups')).eq(0).append(button)
+        key(hotkey, func);
+    }
+    function keyButton(hotkey, desc, func) {addHotckeyButton(true, hotkey, desc, func)}
+    function groupButton(hotkey, desc, func) {addHotckeyButton(false, hotkey, desc, func)}
+
+    ///////////////////////////////////////////
+
+    key('⌘+1', function(){
+        $('a[href="#free_keywords"]').click()
+        return false;
+    })
+
+    key('⌘+2', function(){
+        $('a[href="#grouped_keywords"]').click()
+        return false;
+    })
+
+    key('⌘+3', function(){
+        $('a[href="#blacklist_keywords"]').click()
+        return false;
+    })
+
+    ///////////////////////////////////////////
+
+    keyButton('⌘+A', 'Выделить всё', function(){
+        $('.keyword-item input[type=checkbox]').prop('checked', true)
+        EventMachine.send('change_selected_keywords_set')
+        return false;
+    })
+
+    keyButton('⌘+C', 'Создать группу', function(){
+        EventMachine.send('TreeViewEvent Move_selected_ungrouped_keywords_to_droppable_zone')
+        EventMachine.send('treeUpdated')
+        return false;
+    })
+
+    keyButton('⌘+⌥+C', 'Дополнить последнюю круппу', function(){
+        EventMachine.send('TreeViewEvent Move_selected_ungrouped_keywords_to_last_modified_group')
+        EventMachine.send('treeUpdated')
+        return false;
+    })
+
+    keyButton('⌘+D', 'Снять выделение', function(){
+        $('.keyword-item input[type=checkbox]').prop('checked', false)
+        EventMachine.send('change_selected_keywords_set')
+        return false;
+    })
+
+    keyButton('⌘+G', 'В корзину', function(){
+        EventMachine.send('Move_selected_ungrouped_keywords_to_trash')
+        return false;
+    })
+
+    keyButton('⌘+⌥+G', 'Восстановить', function(){
+        EventMachine.send('Move_selected_keywords_from_trash')
+        return false;
+    })
+
+    //////////////////////////////////////////
+
+    groupButton('⌘+S', 'Создать группу', function(){
+        EventMachine.send('Show_modal_for_section_creating')
+        return false;
+    })
+
+}
+
+function createSpecialActions() {
+    $('.addNewKeywordsToProject-submit').on('click', function(){
+        var text = $('#addNewKeywordsToProjectTextarea').val()
+        $('#addNewKeywordsToProjectTextarea').val('')
+        $('#addNewKeywordsToProject').modal('hide')
+        asyncRequest({project_id: projectId, action: 'create_phrases', phrases_raw_text: text}, function (resp) {
+            updateCurrentDataset();
+        })
+    })
+
+    $('.js-export-for-tz').on('click', function(){
+
+
+        var sectionNames = clusterNamespace.treeView.getRootSectionNames()
+        var root = $('<div/>')
+        for (var i in sectionNames) {
+            var name = sectionNames[i]
+            var $input = $('<input class="select-section-names" type="checkbox" checked />').val(name)
+            var item = $('<label></label>').append($input).append(name)
+            root.append(item).append($('<br/>'))
+        }
+        var button = $('<button type="button" class="btn btn-primary">Показать</button>')
+        button.on('click', function(){
+            var checkedNames = []
+            $('.select-section-names:checked').each(function(){
+                checkedNames.push($(this).val())
+            })
+
+            var data = clusterNamespace.treeView.exportForTZ(checkedNames)
+            var textarea = $('<textarea style="margin: 20px 0" class="form-control" rows="5"></textarea>')
+            textarea.val(data)
+            $('.js-export-for-tz').eq(0).parent().append(textarea)
+            root.empty()
+        })
+        root.append(button)
+
+        $(this).parent().append(root)
     })
 }
 
@@ -185,18 +365,16 @@ $(document).ready(function () {
 
     projectId = $("#project_id").val();
 
-    initTabSwitching();
-    initKeywordFilters();
-    initSwitchPanelsButton();
-    createTreeView();
-
-    $(function () {
-        $('[data-toggle="tooltip"]').tooltip()
-    })
-
-    $("#start_tab").click()
-
-    EventMachine.register('treeUpdated', onTreeUpdated)
+    if ($('.JS-Clustering').length != 0) {
+        initTabSwitching();
+        initKeywordFilters();
+        initSwitchPanelsButton();
+        createTreeView();
+        createCommonActions();
+        createSpecialActions();
+        createKeymap()
+        $("#start_tab").click()
+    }
 
     $('.autoresizeTextarea').autosize()
 

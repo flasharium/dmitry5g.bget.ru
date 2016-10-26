@@ -128,6 +128,12 @@ if ($ya_connect) {
 
   <div class="row">
     <div class="col-md-12">
+        <? require_once 'views/actions.php'; ?>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
         <? insert_dash_connect_block($authUrl, $ga_connect, $ya_connect); ?>
     </div>
   </div>

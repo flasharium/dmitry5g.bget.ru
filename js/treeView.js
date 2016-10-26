@@ -10,18 +10,100 @@ draggableParams = {
 }
 
 String.prototype.format = String.prototype.f = function () {
+    // "{0} {1} {2}".format(1, 2, 3)
     var args = arguments;
-    return this.replace(/\{(\d+)\}/g, function (m, n) {
+    return this.replace(/\{(\d+)}/g, function (m, n) {
         return args[n] ? args[n] : m;
-    });
+    })
 };
-
 
 var TreeView;
 TreeView = function (isTouchDevice) {
     var data, view;
     var dictSections, dictGroups, dictKeys;
-    var touchscreen = isTouchDevice
+    var touchscreen = isTouchDevice;
+    var lastModifiedGroup
+
+    /////////////////////////////////////////////////////////////////////////
+
+    EventMachine.register('TreeViewEvent Move_selected_ungrouped_keywords_to_droppable_zone', function($item){
+        var selected = $('.keyword-item input:checked').parents('li');
+        if (selected.length > 0) {
+
+            var newGroup = []
+            selected.each(function () {
+                if ($(this).parents('#draggingContainer').length == 0) {
+                    newGroup.push(getKeyData($(this)))
+                }
+            })
+            selected.remove()
+            $(".treeView-root").append(createGroupView(newGroup))
+
+        } else if ($item) {
+
+            $(".treeView-root").append(createGroupView([getKeyData($item)]))
+            $item.remove()
+
+        }
+    })
+
+    EventMachine.register('TreeViewEvent Move_selected_ungrouped_keywords_to_last_modified_group', function(){
+        var selected = $('.keyword-item input:checked').parents('li');
+        if (selected.length > 0 && lastModifiedGroup) {
+
+            selected.each(function () {
+                if ($(this).parents('#draggingContainer').length == 0) {
+                    lastModifiedGroup.append(createKeyView(getKeyData($(this))))
+                }
+            })
+            selected.remove()
+            updateGroupView(lastModifiedGroup)
+        }
+    })
+
+    // MOVE ANYTHING TO KEYWORDS TAB
+
+    EventMachine.register('TreeViewEvent move_key_to_keywords_tab', function($item){
+        var keyIds = [$item.attr('keyId')];
+        var group = $item.parent()
+        EventMachine.send('ServerRequest unset_groupId_for_keys_by_ids', keyIds)
+        $item.remove()
+        updateGroupView(group)
+    })
+
+    EventMachine.register('TreeViewEvent move_group_to_keywords_tab', function($item){
+        var keyIds = [];
+        $item.find('.treeView-key').each(function(){keyIds.push($(this).attr('keyId'))})
+        EventMachine.send('ServerRequest unset_groupId_for_keys_by_ids', keyIds)
+        $item.remove()
+    })
+
+    EventMachine.register('TreeViewEvent move_section_to_keywords_tab', function($item){
+        var keyIds = [];
+        $item.find('.treeView-key').each(function(){keyIds.push($(this).attr('keyId'))})
+        $item.remove()
+        EventMachine.send('ServerRequest unset_groupId_for_keys_by_ids', keyIds)
+    })
+
+    // MOVE ANYTHING TO TRASH
+
+    EventMachine.register('TreeViewEvent Move_key_to_trash', function($item){
+        var keyIds = [$item.attr('keyId')];
+        var group = $item.parent()
+        $item.remove()
+        updateGroupView(group)
+        EventMachine.send('ServerRequest move_keywords_to_trash', keyIds)
+    })
+
+    EventMachine.register('TreeViewEvent Move_group_to_trash', function($item){
+        var keyIds = [];
+        $item.find('.treeView-key').each(function(){keyIds.push($(this).attr('keyId'))})
+        $item.remove()
+        EventMachine.send('ServerRequest move_keywords_to_trash', keyIds)
+    })
+
+    /////////////////////////////////////////////////////////////////////////
+
 
     function createDict(array, field) {
         var dict = {};
@@ -34,7 +116,7 @@ TreeView = function (isTouchDevice) {
         return dict
     }
 
-    function getKeyData(view, short=null) {
+    function getKeyData(view, short) {
         if (short) {
             return {'id' : view.attr("keyId")}
         }
@@ -97,6 +179,8 @@ TreeView = function (isTouchDevice) {
         groupView.find('.treeView-key').sort(function (a, b) {
             return +$(b).attr('frequence') - +$(a).attr('frequence');
         }).appendTo(groupView);
+
+        lastModifiedGroup = groupView
     }
 
     function createGroupView(keys) {
@@ -108,28 +192,28 @@ TreeView = function (isTouchDevice) {
         }
 
         var span = $('<span class="treeView-group-header-label"></span>')
-        var groupHeader = $("<div class='treeView-group-header glyphicon glyphicon-triangle-bottom'></div>").append(span)
-        groupHeader.on('click', function () {
-            groupHeader
-                .toggleClass("glyphicon-triangle-right")
-                .toggleClass("glyphicon-triangle-bottom")
-                .siblings('.treeView-key')
-                .each(function(){
-                    if (groupHeader.hasClass("glyphicon-triangle-bottom")) {
-                        $(this).show(200)
-                    } else {
-                        $(this).hide(200)
-                    }
-                });
-        })
-        groupRoot.prepend(groupHeader);
+        var groupHeader = $("<div class='treeView-group-header glyphicon glyphicon-triangle-bottom'></div>")
+            .append(span)
+            .on('click', function () {
+                groupHeader
+                    .toggleClass("glyphicon-triangle-right")
+                    .toggleClass("glyphicon-triangle-bottom")
+                    .siblings('.treeView-key')
+                    .each(function(){
+                        if (groupHeader.hasClass("glyphicon-triangle-bottom")) {
+                            $(this).show(200)
+                        } else {
+                            $(this).hide(200)
+                        }
+                    });
+            })
 
+        groupRoot.prepend(groupHeader);
         updateGroupView(groupRoot)
 
         if (!touchscreen) {
 
             groupRoot.draggable(draggableParams)
-
             groupRoot.droppable({
                 accept: ".treeView-key, .treeView-group, .keyword-item",
                 hoverClass: 'bg-blue',
@@ -185,25 +269,55 @@ TreeView = function (isTouchDevice) {
 
         }
 
+        lastModifiedGroup = groupRoot
+
         return groupRoot
     }
 
     function createSectionView(section) {
-        var sectionRoot = $("<div class='treeView-section'></div>");
+        var sectionRoot = $("<div class='treeView-section'></div>"), i;
+        var sectionHeader = $("<div class='treeView-section-header glyphicon glyphicon-folder-open'></div>")
         sectionRoot.append(
-            $("<div class='treeView-section-header glyphicon glyphicon-folder-open'></div>")
-                .append($('<span class="treeView-section-header-label"></span>').text(section.title))
+            sectionHeader.append($('<span class="treeView-section-header-label"></span>').text(section.title))
         );
+        var changeName = $('<span class="treeView-section-change-title glyphicon glyphicon-pencil"></span>')
+        sectionHeader.append(changeName)
+        changeName.on('click', function(e){
+            var $changeSectionNameModal = $('#changeSectionName');
+            $changeSectionNameModal.modal('show')
+
+            var currentTitle = $(this).parents('.treeView-section').eq(0).find('.treeView-section-header-label').eq(0)
+            currentTitle.addClass('treeView-changingTitle')
+            $changeSectionNameModal.find('.changeSectionName-title').eq(0).val(currentTitle.text())
+
+            e.preventDefault()
+            return false;
+        })
+
+        $('#changeSectionName').find('.changeSectionName-submit').eq(0).on('click', function(e){
+            var $changeSectionNameModal = $('#changeSectionName');
+            $changeSectionNameModal.modal('hide')
+
+            var newTitle = $changeSectionNameModal.find('.changeSectionName-title').eq(0).val()
+            var labelElem = $('.treeView-changingTitle').eq(0)
+            labelElem.removeClass('treeView-changingTitle')
+            labelElem.text(newTitle)
+
+            EventMachine.send('treeUpdated')
+
+            e.preventDefault()
+            return false;
+        })
 
         if (section.id && dictSections[section.id]) {
-            for (var i = 0; i < dictSections[section.id].length; i++) {
+            for (i = 0; i < dictSections[section.id].length; i++) {
                 var childSection = dictSections[section.id][i];
                 sectionRoot.append(createSectionView(childSection))
             }
         }
 
         if (section.id && dictGroups[section.id]) {
-            for (var i = 0; i < dictGroups[section.id].length; i++) {
+            for (i = 0; i < dictGroups[section.id].length; i++) {
                 var group = dictGroups[section.id][i];
                 var keys = dictKeys[group.id]
                 sectionRoot.append(createGroupView(keys))
@@ -234,16 +348,14 @@ TreeView = function (isTouchDevice) {
                     } else if ($item.hasClass('treeView-key')) {
 
                         var oldGroup = $item.parent()
-                        var newGroup = [getKeyData($item)]
                         $item.remove()
                         updateGroupView(oldGroup)
-                        self.append(createGroupView(newGroup))
+                        self.append(createGroupView([getKeyData($item)]))
 
                     } else if ($item.hasClass('keyword-item')) {
 
-                        var newGroup = [getKeyData($item)]
                         $item.remove()
-                        self.append(createGroupView(newGroup))
+                        self.append(createGroupView([getKeyData($item)]))
 
                     }
 
@@ -342,9 +454,7 @@ TreeView = function (isTouchDevice) {
 
                     } else if ($item.hasClass('keyword-item')) {
 
-                        var newGroup = [getKeyData($item)]
-                        $item.remove()
-                        $(".treeView-root").append(createGroupView(newGroup))
+                        EventMachine.send('TreeViewEvent Move_selected_ungrouped_keywords_to_droppable_zone', $item)
 
                     }
 
@@ -357,27 +467,31 @@ TreeView = function (isTouchDevice) {
                 hoverClass: 'bg-blue',
                 tolerance: 'pointer',
                 drop: function (event, ui) {
-
                     var $item = $(ui.draggable[0])
-
                     if ($item.hasClass('treeView-group')) {
-
-                        $item.remove()
-
+                        EventMachine.send('TreeViewEvent Move_group_to_trash', $item)
                     } else if ($item.hasClass('treeView-key')) {
-
-                        var oldGroup = $item.parent()
-                        $item.remove()
-                        updateGroupView(oldGroup)
-
+                        EventMachine.send('TreeViewEvent Move_key_to_trash', $item)
                     } else if ($item.hasClass('keyword-item')) {
-
-                        var selected = $('.keyword-item input:checked').parents('li');
-                        $item.remove()
-                        selected.remove()
-
+                        EventMachine.send('Move_selected_ungrouped_keywords_to_trash')
                     }
+                    EventMachine.send('treeUpdated')
+                }
+            })
 
+            $('.js-keywords-tab').droppable({
+                accept: ".treeView-key, .treeView-group, .treeView-section",
+                hoverClass: 'bg-blue',
+                tolerance: 'pointer',
+                drop: function (event, ui) {
+                    var $item = $(ui.draggable[0])
+                    if ($item.hasClass('treeView-group')) {
+                        EventMachine.send('TreeViewEvent move_group_to_keywords_tab', $item)
+                    } else if ($item.hasClass('treeView-key')) {
+                        EventMachine.send('TreeViewEvent move_key_to_keywords_tab', $item)
+                    } else if ($item.hasClass('treeView-section')) {
+                        EventMachine.send('TreeViewEvent move_section_to_keywords_tab', $item)
+                    }
                     EventMachine.send('treeUpdated')
                 }
             })
@@ -388,7 +502,8 @@ TreeView = function (isTouchDevice) {
     function createGui() {
         var myModal = $('#myModal');
         var input = myModal.find('.myModal-title')
-        myModal.find('.myModal-submit').on('click', function(){
+
+        var onCreateSectionClick = function(){
             var title = myModal.find('.myModal-title').eq(0).val()
             if (title != '' && title.search(/[0-9]/) == -1) {
                 myModal.modal('hide')
@@ -398,13 +513,22 @@ TreeView = function (isTouchDevice) {
             } else {
                 input.parent().addClass('has-error')
             }
-        })
+        };
 
-        $('.button-create-section').on('click', function () {
+        myModal.find('.myModal-submit').on('click', onCreateSectionClick)
+        input.onPressEnter(onCreateSectionClick);
+
+        var handler = function () {
             input.val('')
             input.parent().removeClass('has-error')
             myModal.modal('show')
-        })
+            myModal.on('shown.bs.modal', function () {
+                input.focus()
+            })
+        }
+
+        $('.button-create-section').on('click', handler)
+        EventMachine.register('Show_modal_for_section_creating', handler)
     }
 
 
@@ -419,18 +543,13 @@ TreeView = function (isTouchDevice) {
         data = _data;
 
         var sections = data.sections || [];
+        //noinspection JSUnresolvedVariable
         var groups = data.groups || [];
         var keys = data.keywords || [];
 
         dictSections = createDict(sections, 'parent_id');
         dictGroups = createDict(groups, 'section_id');
         dictKeys = createDict(keys, 'group_id')
-
-        console.log(JSON.stringify({
-            'dictSections' : dictSections,
-            'dictGroups' : dictGroups,
-            'dictKeys' : dictKeys,
-        }, null, 4));
     };
 
     function parseGroup(groupView) {
@@ -466,6 +585,7 @@ TreeView = function (isTouchDevice) {
         view.empty();
         view.append(createRootView())
         view.append($('<div class="treeView-droppable-zone"><br/><br/><br/></div>'))
+        view.find('.treeView-group-header').trigger('click')
 
         if (!touchscreen) {
             makeDraggable()
@@ -473,6 +593,45 @@ TreeView = function (isTouchDevice) {
 
         createGui()
     };
+
+    this.exportForTZ = function(names) {
+        var res = '';
+
+        if (names && names.length > 0) {
+            for(var i in names) {
+                var name = names[i]
+                $('.treeView-section').each(function(){
+                    if ($(this).find('.treeView-section-header-label').eq(0).text() == name) {
+                        $(this).find('.treeView-group').each(function(){
+                            $(this).find('.treeView-key').each(function(){
+                                var data = getKeyData($(this))
+                                res += "{0};{1}\n".format(data.phrase, data.frequence)
+                            })
+                            res += ";\n"
+                        })
+                    }
+                })
+            }
+        } else {
+            $('.treeView-group').each(function(){
+                $(this).find('.treeView-key').each(function(){
+                    var data = getKeyData($(this))
+                    res += "{0};{1}\n".format(data.phrase, data.frequence)
+                })
+                res += ";\n"
+            })
+        }
+
+        return res
+    };
+
+    this.getRootSectionNames = function(){
+        var res = []
+        $('div.treeView-root > div.treeView-section > div.treeView-section-header').each(function(){
+            res.push($(this).text())
+        })
+        return res
+    }
 
 };
 

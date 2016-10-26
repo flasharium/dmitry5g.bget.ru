@@ -63,3 +63,11 @@ function generate_random_password() {
     }
     return implode($pass); //turn the array into a string
 }
+
+function array_hash($array, $field = 'id') {
+    $res = array();
+    foreach ($array as $item) {
+        $res[$item[$field]] = $item;
+    }
+    return $res;
+}
